@@ -6,18 +6,17 @@ namespace Shop
     {
         static void Main(string[] args)
         {
-            int exchangeRate = 3;
+            int crystallEachCost = 3;
             Console.WriteLine("Сколько у вас золота?");
-            int goldWallet = int.Parse(Console.ReadLine());
+            int userGold = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Курс 1 к " + exchangeRate);
+            Console.WriteLine($"Стоимость одного кристалла = { crystallEachCost } золота");
             Console.WriteLine("Сколько кристаллов вы хотите приобрести?");
-            int crystallsWallet = int.Parse(Console.ReadLine());
+            int crystallsOrder = int.Parse(Console.ReadLine());
 
-            int goldBalance = crystallsWallet * exchangeRate;
-            goldWallet -= goldBalance;
-            Console.WriteLine($"Вы приобрели { crystallsWallet } кристалл(ов).");
-            Console.WriteLine($"У вас осталось { goldWallet } золота.");
+            userGold -= crystallsOrder * crystallEachCost;
+            Console.WriteLine($"Вы приобрели { crystallsOrder } кристалл(ов).");
+            Console.WriteLine($"У вас осталось { userGold } золота.");
         }
     }
 }

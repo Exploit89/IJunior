@@ -6,13 +6,12 @@ namespace Pictures
     {
         static void Main(string[] args)
         {
-            byte album = 52;
+            byte imagesInAlbum = 52;
             byte imagesAtRow = 3;
-            int filledRows = album / imagesAtRow;
-            int images = filledRows * imagesAtRow;
-            int remainder = album % imagesAtRow;
-            Console.WriteLine("Рядов: " + filledRows);
-            Console.WriteLine("Осталось картинок: " + remainder);
+            int filledRows = imagesInAlbum / imagesAtRow;
+            int imagesLeft = imagesInAlbum % imagesAtRow;
+            Console.WriteLine("Заполненных рядов: " + filledRows);
+            Console.WriteLine("Осталось картинок: " + imagesLeft);
             Console.ReadKey();
         }
     }
