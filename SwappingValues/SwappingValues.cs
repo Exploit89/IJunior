@@ -7,14 +7,14 @@ namespace SwappingValues
         static void Main(string[] args)
         {
             string name = "Khu";
-            string surName = "Aleks";
+            string surname = "Aleks";
 
-            Console.WriteLine("Initial values");
-            Console.WriteLine("Name: " + name + "\nSurname: " + surName + "\n");
+            Console.WriteLine("Исходные данные");
+            Console.WriteLine($"Имя: { name } \nФамилия: { surname } \n");
 
-            (name, surName) = (surName, name);
-            Console.WriteLine("After swapping");
-            Console.WriteLine("Name: " + name + "\nSurname: " + surName + "\n");
+            (name, surname) = (surname, name);
+            Console.WriteLine("Поменяли местами");
+            Console.WriteLine($"Имя: { name } \nФамилия: { surname } \n");
         }
     }
 }
