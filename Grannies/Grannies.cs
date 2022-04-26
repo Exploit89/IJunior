@@ -13,7 +13,7 @@ namespace Grannies
             int grannyHours = minutesPerEachGranny * grannies;
             int waitingHours = grannyHours / minutesInHour;
             int waitingMinutes = grannyHours % minutesInHour;
-            Console.WriteLine("Вы должны ждать в очереди " + waitingHours + " часов и " + waitingMinutes + " минут");
+            Console.WriteLine($"Вы должны ждать в очереди { waitingHours } часов и { waitingMinutes } минут");
         }
     }
 }
