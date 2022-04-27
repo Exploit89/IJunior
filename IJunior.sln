@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomSum", "RandomSum\Rand
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter", "CurrencyConverter\CurrencyConverter.csproj", "{CCDDC191-0859-4A07-AB57-D100E7F90FB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMenu", "ConsoleMenu\ConsoleMenu.csproj", "{8546E6C1-93BA-48BF-B089-432AF29DD268}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{CCDDC191-0859-4A07-AB57-D100E7F90FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCDDC191-0859-4A07-AB57-D100E7F90FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCDDC191-0859-4A07-AB57-D100E7F90FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8546E6C1-93BA-48BF-B089-432AF29DD268}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8546E6C1-93BA-48BF-B089-432AF29DD268}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8546E6C1-93BA-48BF-B089-432AF29DD268}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8546E6C1-93BA-48BF-B089-432AF29DD268}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
