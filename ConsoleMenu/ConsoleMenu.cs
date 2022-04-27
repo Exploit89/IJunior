@@ -17,12 +17,14 @@ namespace ConsoleMenu
 
             Console.WriteLine("Разбудите меню! Введите \"wakeup\"");
             userInput = Console.ReadLine();
+
             for (int i = tryToWakeCount; i > 0 && userInput != "wakeup"; i--)
             {
                 Console.WriteLine("Разбудите меню! Введите \"wakeup\"" +
                     $"\n У вас осталось {i} попытки");
                 userInput = Console.ReadLine();
             }
+
             if (userInput == "wakeup")
             {
                 Console.WindowHeight = windowHeight;
@@ -54,6 +56,7 @@ namespace ConsoleMenu
                     "                    typemyname\n" +
                     "                    yellowbgcolor\n");
                 userInput = Console.ReadLine();
+
                 switch (userInput)
                 {
                     case "exit":
