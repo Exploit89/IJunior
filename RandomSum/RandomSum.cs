@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RandomSum
 {
@@ -12,6 +8,17 @@ namespace RandomSum
         {
             Random random = new Random();
             int randomNumber = random.Next(0, 101);
+            Console.WriteLine("Выбранное число: " + randomNumber);
+            int result = 0;
+
+            for (int i = 0; i <= randomNumber; i++)
+            {
+                if (i % 3 == 0 || i % 5 == 0)
+                {
+                    result += i;
+                }
+            }
+            Console.WriteLine("Сумма чисел до выбранного включительно, кратных 3 и 5: " + result);
         }
     }
 }
