@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NameOutput
 {
@@ -15,8 +11,16 @@ namespace NameOutput
             Console.Write("Введите любой символ: ");
             char userSymbol = Convert.ToChar(Console.ReadLine());
             int userNameLength = userName.Length;
-
-
+            for(int i = -1; i <= userNameLength; i++)
+            {
+                Console.Write(userSymbol);
+            }
+            Console.WriteLine("\n" + userSymbol + userName + userSymbol);
+            for (int i = -1; i <= userNameLength; i++)
+            {
+                Console.Write(userSymbol);
+            }
+            Console.WriteLine("\n");
         }
     }
 }
