@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Brackets
 {
@@ -14,7 +10,7 @@ namespace Brackets
             string bracketString = Console.ReadLine();
             int bracketsCounter = 0;
             int stringLength = bracketString.Length;
-            int nestingLevel = 1;
+            int nestingLevel = 0;
 
             if (bracketString[0] == ')' || bracketString[stringLength - 1] == '(')
             {
@@ -26,23 +22,30 @@ namespace Brackets
                 {
                     if (bracketString[i] == '(')
                     {
-                        if(bracketString[i] == bracketString[i+1])
+                        bracketsCounter++;
+                        if (nestingLevel > bracketsCounter)
                         {
-                            bracketsCounter++;
-                            nestingLevel++;
+                            continue;
                         }
                         else
                         {
-                            bracketsCounter++;
-                        }   
+                            nestingLevel = bracketsCounter;
+                        }
                     }
                     else
                     {
                         bracketsCounter--;
                     }
                 }
-                Console.WriteLine(bracketsCounter);
-                Console.WriteLine(nestingLevel);
+
+                if (bracketsCounter == 0)
+                {
+                    Console.WriteLine("Глубина скобок: " + nestingLevel);
+                }
+                else
+                {
+                    Console.WriteLine("Последовательность неправильная");
+                }
             }
         }
     }
