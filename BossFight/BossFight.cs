@@ -8,7 +8,7 @@ namespace BossFight
         {
             float bossHealth = 1000;
             float bossDamage = 50;
-            float bossShield;
+            float bossIncomingDamageRatio = 1;
             float maxUserHealth = 500;
             float userHealth = maxUserHealth;
             int userDamage = 50;
@@ -25,8 +25,7 @@ namespace BossFight
             int bossShieldActivationChance;
 
             string userInput;
-            bool isGaming = true;
-            int turnCounter = 0;
+            int turnCount = 0;
             int lastUsedFireball = -1;
             int lastUsedCurse = -1;
             int lastUsedHeal = -1;
@@ -35,42 +34,48 @@ namespace BossFight
             int curseCooldown = 1;
             int healCooldown = 2;
             int shieldCooldown = 2;
+            int healBlockAfterShield = lastUsedShield + 1;
+            float bossCursedDamage = bossDamage * curseSpell;
+            float fireballDamage;
+            float usualAttackDamage;
 
-            int userGreenHitPoints = 399;
-            int userYellowHitPoints = 249;
-            int userOrangeHitPoints = 99;
+            int userHighHitPointsIndicator = 399;
+            int userMiddleHitPointsIndicator = 249;
+            int userLowHitPointsIndicator = 99;
 
             Console.WriteLine("Бой начинается!");
             Console.WriteLine("Первый удар за вами. Выберите опцию: ");
 
-            while (isGaming)
+            while (userHealth > 0 && bossHealth > 0)
             {
-                turnCounter++;
+                turnCount++;
                 bossShieldActivationChance = randomNumber.Next(minShieldActivationChance, maxShieldActivationChance);
 
                 if (bossShieldActivationChance >= shieldActivationSuccess)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Внимание! Босс активирует поглощающий щит!");
-                    bossShield = 0.5f;
+                    bossIncomingDamageRatio = 0.5f;
                 }
                 else
                 {
-                    bossShield = 1;
+                    bossIncomingDamageRatio = 1;
                 }
 
+                fireballDamage = fireballSpell * bossIncomingDamageRatio;
+                usualAttackDamage = userDamage * bossIncomingDamageRatio;
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("ХП Босса: " + bossHealth);
 
-                if (userHealth > userGreenHitPoints)
+                if (userHealth > userHighHitPointsIndicator)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                 }
-                else if(userHealth < userGreenHitPoints && userHealth > userYellowHitPoints)
+                else if(userHealth < userHighHitPointsIndicator && userHealth > userMiddleHitPointsIndicator)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                 }
-                else if(userHealth < userYellowHitPoints && userHealth > userOrangeHitPoints)
+                else if(userHealth < userMiddleHitPointsIndicator && userHealth > userLowHitPointsIndicator)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                 }
@@ -92,37 +97,34 @@ namespace BossFight
                 switch (userInput)
                 {
                     case "1":
-                        Console.WriteLine($"Вы нанесли удар {userDamage * bossShield}");
-                        bossHealth -= userDamage * bossShield;
+                        Console.WriteLine($"Вы нанесли удар {usualAttackDamage}");
+                        bossHealth -= usualAttackDamage;
                         Console.WriteLine($"Враг нанес удар {bossDamage}");
                         userHealth -= bossDamage;
                         break;
                     case "2":
-                        if (lastUsedCurse + curseCooldown < turnCounter)
+                        if (lastUsedCurse + curseCooldown < turnCount)
                         {
-                            lastUsedCurse = turnCounter;
+                            lastUsedCurse = turnCount;
                             Console.WriteLine("Вы проклинаете врага на 2 хода (-80% урона)");
-                            Console.WriteLine($"Враг нанес удар {(bossDamage * curseSpell)}");
-                            userHealth -= bossDamage * curseSpell;
-                            Console.WriteLine("Автоатака после проклятия");
-                            Console.WriteLine($"Вы нанесли удар {userDamage * bossShield}");
-                            bossHealth -= userDamage * bossShield;
-                            Console.WriteLine($"Враг нанес удар {(bossDamage * curseSpell)}");
-                            userHealth -= bossDamage * curseSpell;
+                            Console.WriteLine($"Автоатака после проклятия {usualAttackDamage}");
+                            bossHealth -= usualAttackDamage;
+                            Console.WriteLine($"Враг нанес удар {bossCursedDamage}");
+                            userHealth -= bossCursedDamage;
                             break;
                         }
                         else
                         {
                             Console.WriteLine("Вы не можете использовать это заклинание сейчас");
-                            turnCounter--;
+                            turnCount--;
                             break;
                         }
                     case "3":
-                        if(lastUsedFireball + fireballCooldown < turnCounter)
+                        if(lastUsedFireball + fireballCooldown < turnCount)
                         {
-                            lastUsedFireball = turnCounter;
-                            Console.WriteLine($"Вы запустили огненный шар {fireballSpell * bossShield}");
-                            bossHealth -= fireballSpell * bossShield;
+                            lastUsedFireball = turnCount;
+                            Console.WriteLine($"Вы запустили огненный шар {fireballDamage}");
+                            bossHealth -= fireballDamage;
                             Console.WriteLine($"Враг нанес удар {bossDamage}");
                             userHealth -= bossDamage;
                             break;
@@ -130,13 +132,13 @@ namespace BossFight
                         else
                         {
                             Console.WriteLine("Вы не можете использовать это заклинание сейчас");
-                            turnCounter--;
+                            turnCount--;
                             break;
                         }
                     case "4":
-                        if (lastUsedHeal + healCooldown < turnCounter && (lastUsedShield + 1) < turnCounter)
+                        if (lastUsedHeal + healCooldown < turnCount && healBlockAfterShield < turnCount)
                         {
-                            lastUsedHeal = turnCounter;
+                            lastUsedHeal = turnCount;
 
                             if(userHealth <= maxUserHealth)
                             {
@@ -160,13 +162,13 @@ namespace BossFight
                         else
                         {
                             Console.WriteLine("Вы не можете использовать это заклинание сейчас");
-                            turnCounter--;
+                            turnCount--;
                             break;
                         }
                     case "5":
-                        if (lastUsedShield + shieldCooldown < turnCounter)
+                        if (lastUsedShield + shieldCooldown < turnCount)
                         {
-                            lastUsedShield = turnCounter;
+                            lastUsedShield = turnCount;
                             Console.WriteLine($"Вы создаете щит");
                             Console.WriteLine($"Враг не наносит урона");
                             break;
@@ -174,39 +176,34 @@ namespace BossFight
                         else
                         {
                             Console.WriteLine("Вы не можете использовать это заклинание сейчас");
-                            turnCounter--;
+                            turnCount--;
                             break;
                         }
+                    default:
+                        Console.WriteLine("Вы должны выбрать один из пунктов для следующего хода.");
+                        turnCount--;
+                        break;
                 }
+            }
 
-                if (userHealth > 0 && bossHealth > 0)
-                {
-                    isGaming = true;
-                }
-                else
-                {
-                    isGaming = false;
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("ХП Босса: " + bossHealth);
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("ХП Босса: " + bossHealth);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("ХП Героя: " + userHealth + "\n");
+            Console.ForegroundColor = ConsoleColor.White;
 
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("ХП Героя: " + userHealth);
-
-                    Console.ForegroundColor = ConsoleColor.White;
-                    if(userHealth <= 0 && bossHealth <= 0)
-                    {
-                        Console.WriteLine("Ничья! Два трупа по цене одного!\n");
-                    }
-                    else if(userHealth <= 0)
-                    {
-                        Console.WriteLine("Вы проиграли...\n");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Вы победили!!!\n");
-                    }
-                }
-            } 
+            if (userHealth <= 0 && bossHealth <= 0)
+            {
+                Console.WriteLine("Ничья! Два трупа по цене одного!\n");
+            }
+            else if (userHealth <= 0)
+            {
+                Console.WriteLine("Вы проиграли...\n");
+            }
+            else
+            {
+                Console.WriteLine("Вы победили!!!\n");
+            }
         }
     }
 }
