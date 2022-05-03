@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Array", "Array\Array.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiggestElement", "BiggestElement\BiggestElement.csproj", "{17A7BB1E-4017-47B9-8FD0-9DA66D167AA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalMaximum", "LocalMaximum\LocalMaximum.csproj", "{6783503D-E43F-4A36-9101-E1A75B62A50E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{17A7BB1E-4017-47B9-8FD0-9DA66D167AA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17A7BB1E-4017-47B9-8FD0-9DA66D167AA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17A7BB1E-4017-47B9-8FD0-9DA66D167AA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6783503D-E43F-4A36-9101-E1A75B62A50E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6783503D-E43F-4A36-9101-E1A75B62A50E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6783503D-E43F-4A36-9101-E1A75B62A50E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6783503D-E43F-4A36-9101-E1A75B62A50E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -171,6 +177,7 @@ Global
 		{EF9CF663-A345-41BB-81F5-0EEBC7453CC4} = {4956F3BE-750D-4BDA-80D9-D208D637EA72}
 		{20E7B7D7-0239-4C10-A451-FD5D97967B76} = {2E439F03-0481-4D92-B339-67E868E2FC83}
 		{17A7BB1E-4017-47B9-8FD0-9DA66D167AA9} = {2E439F03-0481-4D92-B339-67E868E2FC83}
+		{6783503D-E43F-4A36-9101-E1A75B62A50E} = {2E439F03-0481-4D92-B339-67E868E2FC83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28DD9957-988B-4D3F-B65D-FAC8491DFCAD}
