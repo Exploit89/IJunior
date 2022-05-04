@@ -23,8 +23,6 @@ namespace DynamicArray
 
                 switch (userInput)
                 {
-                    case "exit":
-                        break;
                     case "sum":
                         for (int i = 0; i < array.Length; i++)
                         {
