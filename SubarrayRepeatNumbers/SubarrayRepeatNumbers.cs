@@ -13,8 +13,9 @@ namespace SubarrayRepeatNumbers
             int arrayIndexIncrement = 1;
             int repeatingNumber = 0;
             int repeatCount = 1;
-            int startCount = 1;
             int maxRepeatCount = 0;
+            int severalMaxRepeatCount = 0;
+            int zeroingSeveralMaxRepeatCount = 0;
 
             Console.WriteLine("Состав массива: ");
 
@@ -25,23 +26,40 @@ namespace SubarrayRepeatNumbers
             }
             Console.WriteLine();
 
-            for(int i = startCount; i < array.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                if(array[i] == array[i - arrayIndexIncrement])
+                if ((i + arrayIndexIncrement) < array.Length)
                 {
-                    repeatingNumber = array[i];
-                    repeatCount++;
-                    maxRepeatCount = repeatCount;
-                }
-                else
-                {
-                    repeatCount = 1;
+                    if (array[i] == array[i + arrayIndexIncrement])
+                    {
+                        repeatingNumber = array[i];
+                        repeatCount++;
+
+                        if (maxRepeatCount < repeatCount)
+                        {
+                            repeatingNumber = array[i];
+                            maxRepeatCount = repeatCount;
+                            severalMaxRepeatCount = zeroingSeveralMaxRepeatCount;
+                        }
+                        else if (maxRepeatCount == repeatCount)
+                        {
+                            severalMaxRepeatCount += repeatCount;
+                        }
+                    }
+                    else
+                    {
+                        repeatCount = 1;
+                    }
                 }
             }
 
-            if(repeatingNumber == 0)
+            if (repeatingNumber == 0)
             {
                 Console.WriteLine("Нет повторяющихся чисел");
+            }
+            else if (severalMaxRepeatCount > 0 && maxRepeatCount <= severalMaxRepeatCount)
+            {
+                Console.WriteLine("В массиве нет единого наибольшего числа повторений подряд");
             }
             else
             {
