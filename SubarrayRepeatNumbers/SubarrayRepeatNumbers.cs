@@ -7,9 +7,9 @@ namespace SubarrayRepeatNumbers
         static void Main(string[] args)
         {
             Random random = new Random();
-            int[] array = new int[30];
+            int[] array = new int[20];
             int minRandomNumber = 1;
-            int maxRandomNumber = 10;
+            int maxRandomNumber = 9;
             int arrayIndexIncrement = 1;
             int repeatingNumber = 0;
             int repeatCount = 1;
@@ -32,7 +32,6 @@ namespace SubarrayRepeatNumbers
                 {
                     if (array[i] == array[i + arrayIndexIncrement])
                     {
-                        repeatingNumber = array[i];
                         repeatCount++;
 
                         if (maxRepeatCount < repeatCount)
@@ -41,7 +40,7 @@ namespace SubarrayRepeatNumbers
                             maxRepeatCount = repeatCount;
                             severalMaxRepeatCount = zeroingSeveralMaxRepeatCount;
                         }
-                        else if (maxRepeatCount == repeatCount)
+                        else if (maxRepeatCount == repeatCount && array[i] != repeatingNumber)
                         {
                             severalMaxRepeatCount += repeatCount;
                         }
@@ -55,7 +54,7 @@ namespace SubarrayRepeatNumbers
 
             if (repeatingNumber == 0)
             {
-                Console.WriteLine("Нет повторяющихся чисел");
+                Console.WriteLine("Нет подряд повторяющихся чисел");
             }
             else if (severalMaxRepeatCount > 0 && maxRepeatCount <= severalMaxRepeatCount)
             {

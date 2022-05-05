@@ -12,7 +12,6 @@ namespace DynamicArray
             int sum = 0;
             int userInputNumber;
             string userInput = "";
-            int stepCount = 0;
 
             Console.WriteLine("Команда для суммирования введеных чисел - sum\nКоманда для выхода - exit");
             Console.WriteLine("Введите число для сохранения в массив или команду: ");
@@ -29,19 +28,18 @@ namespace DynamicArray
                             sum += array[i];
                         }
                         Console.WriteLine("Сумма значений массива = " + sum);
-                        stepCount--;
                         sum = 0;
                         break;
                     default:
                         userInputNumber = Convert.ToInt32(userInput);
 
-                        if(stepCount != 0)
+                        if(array.Length != 0)
                         {
-                            for(int i = 0; i < stepCount; i++)
+                            for(int i = 0; i < array.Length; i++)
                             {
                                 incrementArray[i] = array[i];
                             }
-                            incrementArray[stepCount] = userInputNumber;
+                            incrementArray[array.Length] = userInputNumber;
                             array = incrementArray;
                         }
                         else
@@ -52,7 +50,6 @@ namespace DynamicArray
                         incrementArray = new int[array.Length + 1];
                         break;
                 }
-                stepCount++;
             }
         }
     }
