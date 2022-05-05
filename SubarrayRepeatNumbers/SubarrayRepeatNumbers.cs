@@ -7,15 +7,12 @@ namespace SubarrayRepeatNumbers
         static void Main(string[] args)
         {
             Random random = new Random();
-            int[] array = new int[20];
+            int[] array = new int[30];
             int minRandomNumber = 1;
-            int maxRandomNumber = 9;
-            int arrayIndexIncrement = 1;
+            int maxRandomNumber = 10;
             int repeatingNumber = 0;
             int repeatCount = 1;
             int maxRepeatCount = 0;
-            int severalMaxRepeatCount = 0;
-            int zeroingSeveralMaxRepeatCount = 0;
 
             Console.WriteLine("Состав массива: ");
 
@@ -28,9 +25,9 @@ namespace SubarrayRepeatNumbers
 
             for (int i = 0; i < array.Length; i++)
             {
-                if ((i + arrayIndexIncrement) < array.Length)
+                if (i < array.Length - 1)
                 {
-                    if (array[i] == array[i + arrayIndexIncrement])
+                    if (array[i] == array[i + 1])
                     {
                         repeatCount++;
 
@@ -38,11 +35,6 @@ namespace SubarrayRepeatNumbers
                         {
                             repeatingNumber = array[i];
                             maxRepeatCount = repeatCount;
-                            severalMaxRepeatCount = zeroingSeveralMaxRepeatCount;
-                        }
-                        else if (maxRepeatCount == repeatCount && array[i] != repeatingNumber)
-                        {
-                            severalMaxRepeatCount += repeatCount;
                         }
                     }
                     else
@@ -52,13 +44,9 @@ namespace SubarrayRepeatNumbers
                 }
             }
 
-            if (repeatingNumber == 0)
+            if (maxRepeatCount == 0)
             {
                 Console.WriteLine("Нет подряд повторяющихся чисел");
-            }
-            else if (severalMaxRepeatCount > 0 && maxRepeatCount <= severalMaxRepeatCount)
-            {
-                Console.WriteLine("В массиве нет единого наибольшего числа повторений подряд");
             }
             else
             {

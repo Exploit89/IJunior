@@ -7,10 +7,6 @@ namespace DynamicArray
         static void Main(string[] args)
         {
             int[] array = new int[0];
-            int[] incrementArray = new int[array.Length + 1];
-            int lastIndexDecrement = 1;
-            int sum = 0;
-            int userInputNumber;
             string userInput = "";
 
             Console.WriteLine("Команда для суммирования введеных чисел - sum\nКоманда для выхода - exit");
@@ -19,35 +15,31 @@ namespace DynamicArray
             while (userInput != "exit")
             {
                 userInput = Console.ReadLine();
+                int sum = 0;
+                int userInputNumber;
 
                 switch (userInput)
                 {
+                    case "exit":
+                        Console.WriteLine("Выход из приложения");
+                        break;
                     case "sum":
                         for (int i = 0; i < array.Length; i++)
                         {
                             sum += array[i];
                         }
                         Console.WriteLine("Сумма значений массива = " + sum);
-                        sum = 0;
                         break;
                     default:
                         userInputNumber = Convert.ToInt32(userInput);
+                        int[] incrementArray = new int[array.Length + 1];
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            incrementArray[i] = array[i];
+                        }
 
-                        if(array.Length != 0)
-                        {
-                            for(int i = 0; i < array.Length; i++)
-                            {
-                                incrementArray[i] = array[i];
-                            }
-                            incrementArray[array.Length] = userInputNumber;
-                            array = incrementArray;
-                        }
-                        else
-                        {
-                            incrementArray[incrementArray.Length - lastIndexDecrement] = userInputNumber;
-                            array = incrementArray;
-                        }
-                        incrementArray = new int[array.Length + 1];
+                        incrementArray[array.Length] = userInputNumber;
+                        array = incrementArray;
                         break;
                 }
             }
