@@ -65,6 +65,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Split", "Split\Split.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayShift", "ArrayShift\ArrayShift.csproj", "{B208F390-D7E5-49B5-AEA8-696A1C56A4BD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter_4", "Chapter_4", "{CA07D5C7-1D80-4EE3-81ED-96CB5FF0D75C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonnelAccounting", "PersonnelAccounting\PersonnelAccounting.csproj", "{10C3E887-86CF-4FC9-A5B6-1E952282423C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -183,6 +187,10 @@ Global
 		{B208F390-D7E5-49B5-AEA8-696A1C56A4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B208F390-D7E5-49B5-AEA8-696A1C56A4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B208F390-D7E5-49B5-AEA8-696A1C56A4BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10C3E887-86CF-4FC9-A5B6-1E952282423C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10C3E887-86CF-4FC9-A5B6-1E952282423C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10C3E887-86CF-4FC9-A5B6-1E952282423C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10C3E887-86CF-4FC9-A5B6-1E952282423C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -213,6 +221,7 @@ Global
 		{00B858A5-437F-4E0E-A6AA-E03AF7DE341A} = {2E439F03-0481-4D92-B339-67E868E2FC83}
 		{CA75E398-F8BF-4279-9A5E-510423CFDD4A} = {2E439F03-0481-4D92-B339-67E868E2FC83}
 		{B208F390-D7E5-49B5-AEA8-696A1C56A4BD} = {2E439F03-0481-4D92-B339-67E868E2FC83}
+		{10C3E887-86CF-4FC9-A5B6-1E952282423C} = {CA07D5C7-1D80-4EE3-81ED-96CB5FF0D75C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28DD9957-988B-4D3F-B65D-FAC8491DFCAD}
