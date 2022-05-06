@@ -28,25 +28,16 @@ namespace PersonnelAccounting
                 switch (userInput)
                 {
                     case 1:
-                        Console.WriteLine("Введите ФИО через пробел:");
-                        string fullNameInput = Console.ReadLine();
-                        Console.WriteLine("Введите должность:\n");
-                        string positionInput = Console.ReadLine();
-                        AddDossier(ref fullName, ref position, fullNameInput, positionInput);
+                        AddDossier(ref fullName, ref position);
                         break;
                     case 2:
-                        Console.WriteLine("Полный список кадров:\n");
                         ShowAllDossiers(ref fullName, ref position);
                         break;
                     case 3:
-                        Console.WriteLine("Укажите номер досье для удаления:");
-                        int dossierNumberInput = Convert.ToInt32(Console.ReadLine());
-                        DeleteDossier(ref fullName, ref position, dossierNumberInput);
+                        DeleteDossier(ref fullName, ref position);
                         break;
                     case 4:
-                        Console.WriteLine("Введите фамилию для поиска:");
-                        string surnameInput = Console.ReadLine();
-                        SearchBySurname(ref fullName, ref position, surnameInput);
+                        SearchBySurname(ref fullName, ref position);
                         break;
                     case 5:
                         isWorking = false;
@@ -58,8 +49,12 @@ namespace PersonnelAccounting
             }
         }
 
-        static void AddDossier(ref string[] fullName, ref string[] position, string fullNameInput, string positionInput)
+        static void AddDossier(ref string[] fullName, ref string[] position)
         {
+            Console.WriteLine("Введите ФИО через пробел:");
+            string fullNameInput = Console.ReadLine();
+            Console.WriteLine("Введите должность:\n");
+            string positionInput = Console.ReadLine();
             string[] incrementFullNameArray = new string[fullName.Length + 1];
             string[] incrementPositionArray = new string[position.Length + 1];
 
@@ -81,6 +76,8 @@ namespace PersonnelAccounting
 
         static void ShowAllDossiers(ref string[] fullName, ref string[] position)
         {
+            Console.WriteLine("Полный список кадров:\n");
+
             for (int i = 0; i < fullName.Length; i++)
             {
                 Console.Write($"{i + 1} - {fullName[i]} - {position[i]}\n");
@@ -89,9 +86,12 @@ namespace PersonnelAccounting
             Console.WriteLine();
         }
 
-        static void DeleteDossier(ref string[] fullName, ref string[] position, int dossierNumberInput)
+        static void DeleteDossier(ref string[] fullName, ref string[] position)
         {
-            if(fullName.Length == 0)
+            Console.WriteLine("Укажите номер досье для удаления:");
+            int dossierNumberInput = Convert.ToInt32(Console.ReadLine());
+
+            if (fullName.Length == 0)
             {
                 Console.WriteLine("Список пуст");
             }
@@ -126,8 +126,10 @@ namespace PersonnelAccounting
             }
         }
 
-        static void SearchBySurname(ref string[] fullName, ref string[] position, string surnameInput)
+        static void SearchBySurname(ref string[] fullName, ref string[] position)
         {
+            Console.WriteLine("Введите фамилию для поиска:");
+            string surnameInput = Console.ReadLine();
             string[] dividedString = new string[3];
             string fullnameString;
             string[] surnameString = new string[fullName.Length];
