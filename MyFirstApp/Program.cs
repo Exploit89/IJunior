@@ -6,15 +6,33 @@ namespace MyFirstApp
     {
         static void Main(string[] args)
         {
-            int[] bag = new int[0];
-            int[] tempBag = new int[bag.Length + 1];
-            for(int i = 0; i < bag.Length; i++)
+            DrawBar(40);
+        }
+
+        static void DrawBar(int value)
+        {
+            char fillSymbol = '#';
+            char emptySymbol = '_';
+            int maxHealth = 20;
+            float health = maxHealth / 100 * value;
+            string bar = "";
+
+            for (int i = 0; i < health; i++)
             {
-                tempBag[i] = bag[i];
+                bar += fillSymbol;
             }
-            tempBag[tempBag.Length - 1] = Convert.ToInt32(Console.ReadLine());
-            bag = tempBag;
-            Console.WriteLine(bag.Length);
+
+            Console.SetCursorPosition(0, 0);
+            Console.Write('[');
+            Console.Write(bar);
+            bar = "";
+
+            for (float i = health; i < maxHealth; i++)
+            {
+                bar += emptySymbol;
+            }
+
+            Console.Write(bar + ']');
         }
     }
 }
