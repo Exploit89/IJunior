@@ -52,26 +52,9 @@ namespace PersonnelAccounting
         static void AddDossier(ref string[] fullName, ref string[] position)
         {
             Console.WriteLine("Введите ФИО через пробел:");
-            string fullNameInput = Console.ReadLine();
+            ExpandArray(ref fullName);
             Console.WriteLine("Введите должность:\n");
-            string positionInput = Console.ReadLine();
-            string[] incrementFullNameArray = new string[fullName.Length + 1];
-            string[] incrementPositionArray = new string[position.Length + 1];
-
-            for (int i = 0; i < fullName.Length; i++)
-            {
-                incrementFullNameArray[i] = fullName[i];
-            }
-
-            for(int i = 0; i < position.Length; i++)
-            {
-                incrementPositionArray[i] = position[i];
-            }
-
-            incrementFullNameArray[fullName.Length] = fullNameInput;
-            fullName = incrementFullNameArray;
-            incrementPositionArray[position.Length] = positionInput;
-            position = incrementPositionArray;
+            ExpandArray(ref position);
         }
 
         static void ShowAllDossiers(ref string[] fullName, ref string[] position)
@@ -90,40 +73,8 @@ namespace PersonnelAccounting
         {
             Console.WriteLine("Укажите номер досье для удаления:");
             int dossierNumberInput = Convert.ToInt32(Console.ReadLine());
-
-            if (fullName.Length == 0)
-            {
-                Console.WriteLine("Список пуст");
-            }
-            else if(dossierNumberInput < 1 || dossierNumberInput > fullName.Length)
-            {
-                Console.WriteLine($"Досье под номером {dossierNumberInput} не существует.");
-            }
-            else
-            {
-                string[] decrementFullNameArray = new string[fullName.Length - 1];
-                string[] decrementPositionArray = new string[position.Length - 1];
-
-                for (int i = 0; i < dossierNumberInput - 1; i++)
-                {
-                    decrementFullNameArray[i] = fullName[i];
-                    decrementPositionArray[i] = position[i];
-                }
-
-                for (int i = dossierNumberInput - 1; i < fullName.Length; i++)
-                {
-                    if (i < fullName.Length - 1)
-                    {
-                        fullName[i] = fullName[i + 1];
-                        position[i] = position[i + 1];
-                        decrementFullNameArray[i] = fullName[i];
-                        decrementPositionArray[i] = position[i];
-                    }
-                }
-
-                fullName = decrementFullNameArray;
-                position = decrementPositionArray;
-            }
+            ReduceArray(ref fullName, ref dossierNumberInput);
+            ReduceArray(ref position, ref dossierNumberInput);
         }
 
         static void SearchBySurname(ref string[] fullName, ref string[] position)
@@ -147,6 +98,52 @@ namespace PersonnelAccounting
                 {
                     Console.WriteLine($"{i + 1} - {fullName[i]} - {position[i]}\n");
                 }
+            }
+        }
+
+        static void ExpandArray(ref string[] expandArray)
+        {
+            string expandInput = Console.ReadLine();
+            string[] incrementArray = new string[expandArray.Length + 1];
+
+            for (int i = 0; i < expandArray.Length; i++)
+            {
+                incrementArray[i] = expandArray[i];
+            }
+
+            incrementArray[expandArray.Length] = expandInput;
+            expandArray = incrementArray;
+        }
+
+        static void ReduceArray(ref string[] reduceArray, ref int dossierNumberInput)
+        {
+            if (reduceArray.Length == 0)
+            {
+                Console.WriteLine("Список пуст");
+            }
+            else if (dossierNumberInput < 1 || dossierNumberInput > reduceArray.Length)
+            {
+                Console.WriteLine($"Досье под номером {dossierNumberInput} не существует.");
+            }
+            else
+            {
+                string[] decrementArray = new string[reduceArray.Length - 1];
+
+                for (int i = 0; i < dossierNumberInput - 1; i++)
+                {
+                    decrementArray[i] = reduceArray[i];
+                }
+
+                for (int i = dossierNumberInput - 1; i < reduceArray.Length; i++)
+                {
+                    if (i < reduceArray.Length - 1)
+                    {
+                        reduceArray[i] = reduceArray[i + 1];
+                        decrementArray[i] = reduceArray[i];
+                    }
+                }
+
+                reduceArray = decrementArray;
             }
         }
     }
