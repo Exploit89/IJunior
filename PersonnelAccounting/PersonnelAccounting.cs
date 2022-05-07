@@ -37,7 +37,7 @@ namespace PersonnelAccounting
                         DeleteDossier(ref fullNames, ref positions);
                         break;
                     case 4:
-                        SearchBySurname(ref fullNames, positions);
+                        SearchBySurname(fullNames, positions);
                         break;
                     case 5:
                         isWorking = false;
@@ -52,9 +52,9 @@ namespace PersonnelAccounting
         static void AddDossier(ref string[] fullNames, ref string[] positions)
         {
             Console.WriteLine("Введите ФИО через пробел:");
-            AddToArrayAndIncrement(ref fullNames);
+            AddElement(ref fullNames);
             Console.WriteLine("Введите должность:\n");
-            AddToArrayAndIncrement(ref positions);
+            AddElement(ref positions);
         }
 
         static void ShowAllDossiers(string[] fullNames, string[] positions)
@@ -84,36 +84,30 @@ namespace PersonnelAccounting
             }
             else
             {
-                RemoveFromArrayAndReduce(ref fullNames, dossierNumberInput);
-                RemoveFromArrayAndReduce(ref positions, dossierNumberInput);
+                RemoveElement(ref fullNames, dossierNumberInput);
+                RemoveElement(ref positions, dossierNumberInput);
             }
         }
 
-        static void SearchBySurname(ref string[] fullNames, string[] positions)
+        static void SearchBySurname(string[] fullNames, string[] positions)
         {
             Console.WriteLine("Введите фамилию для поиска:");
             string surnameInput = Console.ReadLine();
             string[] dividedString = new string[3];
-            string fullnameString;
             string[] surnameString = new string[fullNames.Length];
 
             for (int i = 0; i < fullNames.Length; i++)
             {
-                fullnameString = Convert.ToString(fullNames[i]);
-                dividedString = fullnameString.Split(' ');
+                dividedString = fullNames[i].Split(' ');
                 surnameString[i] = dividedString[0];
-            }
-
-            for(int i = 0; i < surnameString.Length; i++)
-            {
-                if(surnameString[i] == surnameInput)
+                if (surnameString[i] == surnameInput)
                 {
                     Console.WriteLine($"{i + 1} - {fullNames[i]} - {positions[i]}\n");
                 }
             }
         }
 
-        static void AddToArrayAndIncrement(ref string[] expandArray)
+        static void AddElement(ref string[] expandArray)
         {
             string expandInput = Console.ReadLine();
             string[] incrementArray = new string[expandArray.Length + 1];
@@ -127,7 +121,7 @@ namespace PersonnelAccounting
             expandArray = incrementArray;
         }
 
-        static void RemoveFromArrayAndReduce(ref string[] reduceArray, int dossierNumberInput)
+        static void RemoveElement(ref string[] reduceArray, int dossierNumberInput)
         {
             string[] decrementArray = new string[reduceArray.Length - 1];
 
