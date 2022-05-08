@@ -6,30 +6,32 @@ namespace Readint
     {
         static void Main(string[] args)
         {
-            bool successParse = false;
+            int number = ReadInt();
+            Console.WriteLine($"Успешно преобразовано в число: {number}");
+        }
 
-            while (successParse == false)
+        static int ReadInt()
+        {
+            bool isNumber = false;
+            int number = 0;
+
+            while (isNumber == false)
             {
                 Console.WriteLine("Введите число для конвертации в тип int");
                 string userInput = Console.ReadLine();
-                ParseToInt(userInput, ref successParse);
-            }
-        }
+                isNumber = int.TryParse(userInput, out number);
 
-        static void ParseToInt(string userInput, ref bool successParse)
-        {
-            int number;
-            bool result = int.TryParse(userInput, out number);
+                if (isNumber == false)
+                {
+                    Console.WriteLine("Не удалось сконвертировать в int. Попробуйте снова");
+                }
+                else
+                {
+                    isNumber = true;
+                }
+            }
 
-            if (result == false)
-            {
-                Console.WriteLine("Не удалось сконвертировать в int. Попробуйте снова");
-            }
-            else
-            {
-                Console.WriteLine($"Успешно преобразовано в число: {number}");
-                successParse = true;
-            }
+            return number;
         }
     }
 }
