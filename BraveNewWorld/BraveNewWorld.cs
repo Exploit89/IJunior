@@ -67,9 +67,17 @@ namespace BraveNewWorld
                 }
 
                 PickupItem(map, ref bag, userX, userY);
-                GameOver(map, bag, userX, userY, totalChestCount, ref isGaming);
+
+                if (map[userY, userX] == '%' && bag.Length == totalChestCount)
+                {
+                    Console.SetCursorPosition(31, 2);
+                    isGaming = false;
+                }
+
                 Console.Clear();
             }
+
+            GameOver();
         }
 
         static void DrawMap(char[,] map)
@@ -87,7 +95,8 @@ namespace BraveNewWorld
         
         static void MoveUp(char[,] map, ref int userX, ref int userY)
         {
-            if (map[userY - 1, userX] != '#')
+            GetUpDownDirection(map, userY, userX, out bool upDirection, out bool downDirection);
+            if (upDirection)
             {
                 userY--;
             }
@@ -95,7 +104,8 @@ namespace BraveNewWorld
 
         static void MoveDown(char[,] map, ref int userX, ref int userY)
         {
-            if (map[userY + 1, userX] != '#')
+            GetUpDownDirection(map, userY, userX, out bool upDirection, out bool downDirection);
+            if (downDirection)
             {
                 userY++;
             }
@@ -103,7 +113,8 @@ namespace BraveNewWorld
 
         static void MoveLeft(char[,] map, ref int userX, ref int userY)
         {
-            if (map[userY, userX - 1] != '#')
+            GetLeftRightDirection(map, userY, userX, out bool leftDirection, out bool rightDirection);
+            if (leftDirection)
             {
                 userX--;
             }
@@ -111,7 +122,8 @@ namespace BraveNewWorld
 
         static void MoveRight(char[,] map, ref int userX, ref int userY)
         {
-            if (map[userY, userX + 1] != '#')
+            GetLeftRightDirection(map, userY, userX, out bool leftDirection, out bool rightDirection);
+            if (rightDirection)
             {
                 userX++;
             }
@@ -133,13 +145,49 @@ namespace BraveNewWorld
             }
         }
 
-        static void GameOver(char[,] map, char[] bag, int userX, int userY, int totalChestCount, ref bool isGaming)
+        static void GameOver()
         {
-            if (map[userY, userX] == '%' && bag.Length == totalChestCount)
+            Console.SetCursorPosition(31, 2);
+            Console.WriteLine("Поздравляем! Вы выиграли!");
+        }
+
+        static void GetUpDownDirection(char[,] map, int userY, int userX, out bool upDirection, out bool downDirection)
+        {
+            if (map[userY - 1, userX] != '#')
             {
-                Console.SetCursorPosition(31, 2);
-                Console.WriteLine("Поздравляем! Вы выиграли!");
-                isGaming = false;
+                upDirection = true;
+            }
+            else
+            {
+                upDirection = false;
+            }
+            if (map[userY + 1, userX] != '#')
+            {
+                downDirection = true;
+            }
+            else
+            {
+                downDirection = false;
+            }
+        }
+
+        static void GetLeftRightDirection(char[,] map, int userY, int userX, out bool leftDirection, out bool rightDirection)
+        {
+            if (map[userY, userX - 1] != '#')
+            {
+                leftDirection = true;
+            }
+            else
+            {
+                leftDirection = false;
+            }
+            if (map[userY, userX + 1] != '#')
+            {
+                rightDirection = true;
+            }
+            else
+            {
+                rightDirection = false;
             }
         }
     }
