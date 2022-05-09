@@ -34,9 +34,9 @@ namespace Shuffle
             for(int i = sourceArray.Length - 1; i >= 1; i--)
             {
                 Random randomIndex = new Random();
-                int j = randomIndex.Next(i + 1);
-                int changedNumber = sourceArray[j];
-                sourceArray[j] = sourceArray[i];
+                int replacementIndex = randomIndex.Next(i + 1);
+                int changedNumber = sourceArray[replacementIndex];
+                sourceArray[replacementIndex] = sourceArray[i];
                 sourceArray[i] = changedNumber;
             }
         }
