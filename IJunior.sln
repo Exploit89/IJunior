@@ -81,6 +81,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter_5", "Chapter_5", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dictionary", "Dictionary\Dictionary.csproj", "{8D1976D7-4C60-429E-8EF2-0C58ECD60118}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreQueue", "StoreQueue\StoreQueue.csproj", "{7E67B796-F8B3-4914-95E8-8F25314B3794}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -223,6 +225,10 @@ Global
 		{8D1976D7-4C60-429E-8EF2-0C58ECD60118}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D1976D7-4C60-429E-8EF2-0C58ECD60118}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D1976D7-4C60-429E-8EF2-0C58ECD60118}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E67B796-F8B3-4914-95E8-8F25314B3794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E67B796-F8B3-4914-95E8-8F25314B3794}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E67B796-F8B3-4914-95E8-8F25314B3794}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E67B796-F8B3-4914-95E8-8F25314B3794}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -259,6 +265,7 @@ Global
 		{17D2EA4B-AB5A-48BA-A279-9A43B109281C} = {CA07D5C7-1D80-4EE3-81ED-96CB5FF0D75C}
 		{BBC2D12C-25CE-4778-A3B5-3D238A1117B0} = {CA07D5C7-1D80-4EE3-81ED-96CB5FF0D75C}
 		{8D1976D7-4C60-429E-8EF2-0C58ECD60118} = {F34A7781-EA75-4A9B-AEC0-6071AF44DF4C}
+		{7E67B796-F8B3-4914-95E8-8F25314B3794} = {F34A7781-EA75-4A9B-AEC0-6071AF44DF4C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28DD9957-988B-4D3F-B65D-FAC8491DFCAD}

@@ -30,9 +30,10 @@ namespace BraveNewWorld
             bool isGaming = true;
             int userX = 1;
             int userY = 1;
-            int userDirectionX = 0;
-            int userDirectionY = 0;
-
+            int userDirectionX;
+            int userDirectionY;
+            int descriptionX = 0;
+            int descriptionY = 31;
 
             Console.CursorVisible = false;
 
@@ -40,9 +41,10 @@ namespace BraveNewWorld
 
             while (isGaming)
             {
-                Console.SetCursorPosition(31, 0);
+                isGaming = bag.Length != totalChestCount;
+                Console.SetCursorPosition(descriptionY, descriptionX);
                 Console.WriteLine("Соберите все сундуки 'X'");
-                Console.SetCursorPosition(31, 1);
+                Console.SetCursorPosition(descriptionY, descriptionX + 1);
                 Console.Write("Сумка: ");
 
                 for(int i = 0; i < bag.Length; i++)
@@ -56,12 +58,9 @@ namespace BraveNewWorld
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo charKey = Console.ReadKey(true);
-                    Move(charKey, userDirectionX, userDirectionY, map, ref userX, ref userY, ref bag);
-
-                    if (bag.Length == totalChestCount)
-                    {
-                        isGaming = false;
-                    }
+                    ChangeDirection(charKey, out userDirectionX, out userDirectionY);
+                    Move(userDirectionX, userDirectionY, map, ref userX, ref userY, ref bag);
+                    PickUpItem(map, userX, userY, ref bag);
                 }
             }
 
@@ -105,8 +104,10 @@ namespace BraveNewWorld
             }
         }
 
-        static void Move(ConsoleKeyInfo charKey, int userDirectionX, int userDirectionY, char[,] map, ref int userX, ref int userY, ref char[] bag)
+        static void ChangeDirection(ConsoleKeyInfo charKey, out int userDirectionX, out int userDirectionY)
         {
+            userDirectionX = 0;
+            userDirectionY = 0;
             switch (charKey.Key)
             {
                 case ConsoleKey.UpArrow:
@@ -126,7 +127,10 @@ namespace BraveNewWorld
                     userDirectionY = 1;
                     break;
             }
+        }
 
+        static void Move(int userDirectionX, int userDirectionY, char[,] map, ref int userX, ref int userY, ref char[] bag)
+        {
             if (map[userX + userDirectionX, userY + userDirectionY] != '#')
             {
                 Console.SetCursorPosition(userY, userX);
@@ -134,8 +138,6 @@ namespace BraveNewWorld
 
                 userX += userDirectionX;
                 userY += userDirectionY;
-
-                PickUpItem(map, userX, userY, ref bag);
 
                 Console.SetCursorPosition(userY, userX);
                 Console.Write('@');
