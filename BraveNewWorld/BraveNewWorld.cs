@@ -22,22 +22,26 @@ namespace BraveNewWorld
                 {'#',' ','#',' ','#',' ','#',' ','#',' ','#','#',' ','#',' ',' ',' ','#','X','#',' ',' ','#',' ',' ','#',' ','#',' ','#'},
                 {'#',' ','#',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#','#','#',' ',' ','#',' ','#','#',' ','#',' ','#'},
                 {'#',' ',' ','#','#',' ','#',' ','#',' ',' ',' ','#',' ','#',' ',' ',' ',' ',' ',' ',' ','#',' ','X','#',' ','#','#','#'},
-                {'#','X','#','X',' ',' ','#',' ','#',' ','#',' ','#',' ','#',' ',' ','#',' ',' ',' ',' ','#',' ',' ','#',' ',' ','%','#'},
+                {'#','X','#','X',' ',' ','#',' ','#',' ','#',' ','#',' ','#',' ',' ','#',' ',' ',' ',' ','#',' ',' ','#',' ',' ',' ','#'},
                 {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}
             };
             char[] bag = new char[0];
             int totalChestCount = 9;
+            bool isGaming = true;
             int userX = 1;
             int userY = 1;
-            bool isGaming = true;
+            int userDirectionX = 0;
+            int userDirectionY = 0;
+
 
             Console.CursorVisible = false;
 
+            DrawMap(map);
+
             while (isGaming)
             {
-                DrawMap(map);
                 Console.SetCursorPosition(31, 0);
-                Console.WriteLine("Соберите все сундуки 'X' и доберитесь до выхода '%'");
+                Console.WriteLine("Соберите все сундуки 'X'");
                 Console.SetCursorPosition(31, 1);
                 Console.Write("Сумка: ");
 
@@ -46,35 +50,19 @@ namespace BraveNewWorld
                     Console.Write(bag[i] + " ");
                 }
 
-                Console.SetCursorPosition(userX, userY);
+                Console.SetCursorPosition(userY, userX);
                 Console.Write('@');
-                ConsoleKeyInfo charKey = Console.ReadKey();
 
-                switch (charKey.Key)
+                if (Console.KeyAvailable)
                 {
-                    case ConsoleKey.UpArrow:
-                        MoveUp(map, ref userX, ref userY);
-                        break;
-                    case ConsoleKey.DownArrow:
-                        MoveDown(map, ref userX, ref userY);
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        MoveLeft(map, ref userX, ref userY);
-                        break;
-                    case ConsoleKey.RightArrow:
-                        MoveRight(map, ref userX, ref userY);
-                        break;
+                    ConsoleKeyInfo charKey = Console.ReadKey(true);
+                    ChangeDirection(charKey, userDirectionX, userDirectionY, map, ref userX, ref userY, ref bag);
+
+                    if (bag.Length == totalChestCount)
+                    {
+                        isGaming = false;
+                    }
                 }
-
-                PickupItem(map, ref bag, userX, userY);
-
-                if (map[userY, userX] == '%' && bag.Length == totalChestCount)
-                {
-                    Console.SetCursorPosition(31, 2);
-                    isGaming = false;
-                }
-
-                Console.Clear();
             }
 
             GameOver();
@@ -92,48 +80,20 @@ namespace BraveNewWorld
                 Console.WriteLine();
             }
         }
-        
-        static void MoveUp(char[,] map, ref int userX, ref int userY)
+
+        static void GameOver()
         {
-            GetUpDownDirection(map, userY, userX, out bool upDirection, out bool downDirection);
-            if (upDirection)
-            {
-                userY--;
-            }
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Поздравляем! Вы выиграли!");
         }
 
-        static void MoveDown(char[,] map, ref int userX, ref int userY)
+        static void PickUpItem(char[,] map, int userX, int userY, ref char[] bag)
         {
-            GetUpDownDirection(map, userY, userX, out bool upDirection, out bool downDirection);
-            if (downDirection)
+            if (map[userX, userY] == 'X')
             {
-                userY++;
-            }
-        }
-
-        static void MoveLeft(char[,] map, ref int userX, ref int userY)
-        {
-            GetLeftRightDirection(map, userY, userX, out bool leftDirection, out bool rightDirection);
-            if (leftDirection)
-            {
-                userX--;
-            }
-        }
-
-        static void MoveRight(char[,] map, ref int userX, ref int userY)
-        {
-            GetLeftRightDirection(map, userY, userX, out bool leftDirection, out bool rightDirection);
-            if (rightDirection)
-            {
-                userX++;
-            }
-        }
-
-        static void PickupItem(char[,] map, ref char[] bag, int userX, int userY)
-        {
-            if (map[userY, userX] == 'X')
-            {
-                map[userY, userX] = 'o';
+                map[userX, userY] = ' ';
                 char[] tempBag = new char[bag.Length + 1];
 
                 for (int i = 0; i < bag.Length; i++)
@@ -145,49 +105,40 @@ namespace BraveNewWorld
             }
         }
 
-        static void GameOver()
+        static void ChangeDirection(ConsoleKeyInfo charKey, int userDirectionX, int userDirectionY, char[,] map, ref int userX, ref int userY, ref char[] bag)
         {
-            Console.SetCursorPosition(31, 2);
-            Console.WriteLine("Поздравляем! Вы выиграли!");
-        }
+            switch (charKey.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    userDirectionX = -1;
+                    userDirectionY = 0;
+                    break;
+                case ConsoleKey.DownArrow:
+                    userDirectionX = 1;
+                    userDirectionY = 0;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    userDirectionX = 0;
+                    userDirectionY = -1;
+                    break;
+                case ConsoleKey.RightArrow:
+                    userDirectionX = 0;
+                    userDirectionY = 1;
+                    break;
+            }
 
-        static void GetUpDownDirection(char[,] map, int userY, int userX, out bool upDirection, out bool downDirection)
-        {
-            if (map[userY - 1, userX] != '#')
+            if (map[userX + userDirectionX, userY + userDirectionY] != '#')
             {
-                upDirection = true;
-            }
-            else
-            {
-                upDirection = false;
-            }
-            if (map[userY + 1, userX] != '#')
-            {
-                downDirection = true;
-            }
-            else
-            {
-                downDirection = false;
-            }
-        }
+                Console.SetCursorPosition(userY, userX);
+                Console.Write(" ");
 
-        static void GetLeftRightDirection(char[,] map, int userY, int userX, out bool leftDirection, out bool rightDirection)
-        {
-            if (map[userY, userX - 1] != '#')
-            {
-                leftDirection = true;
-            }
-            else
-            {
-                leftDirection = false;
-            }
-            if (map[userY, userX + 1] != '#')
-            {
-                rightDirection = true;
-            }
-            else
-            {
-                rightDirection = false;
+                userX += userDirectionX;
+                userY += userDirectionY;
+
+                PickUpItem(map, userX, userY, ref bag);
+
+                Console.SetCursorPosition(userY, userX);
+                Console.Write('@');
             }
         }
     }
