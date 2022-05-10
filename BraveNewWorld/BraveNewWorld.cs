@@ -56,7 +56,7 @@ namespace BraveNewWorld
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo charKey = Console.ReadKey(true);
-                    ChangeDirection(charKey, userDirectionX, userDirectionY, map, ref userX, ref userY, ref bag);
+                    Move(charKey, userDirectionX, userDirectionY, map, ref userX, ref userY, ref bag);
 
                     if (bag.Length == totalChestCount)
                     {
@@ -105,7 +105,7 @@ namespace BraveNewWorld
             }
         }
 
-        static void ChangeDirection(ConsoleKeyInfo charKey, int userDirectionX, int userDirectionY, char[,] map, ref int userX, ref int userY, ref char[] bag)
+        static void Move(ConsoleKeyInfo charKey, int userDirectionX, int userDirectionY, char[,] map, ref int userX, ref int userY, ref char[] bag)
         {
             switch (charKey.Key)
             {
