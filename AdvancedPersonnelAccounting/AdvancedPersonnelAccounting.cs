@@ -68,33 +68,11 @@ namespace AdvancedPersonnelAccounting
 
         static void DeleteDossier(Dictionary<string, string> persons)
         {
-            Console.WriteLine("Укажите номер досье для удаления:");
-            int dossierNumberInput = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Укажите ФИО для удаления досье:");
+            string dossierKeyInput = Console.ReadLine();
 
-            if (persons.Count == 0)
-            {
-                Console.WriteLine("Список пуст");
-            }
-            else if (dossierNumberInput < 1 || dossierNumberInput > persons.Count)
-            {
-                Console.WriteLine($"Досье под номером {dossierNumberInput} не существует.");
-            }
-            else
-            {
-                string itemKey = "";
-                int dossierCount = 0;
-
-                foreach(var item in persons)
-                {
-                    dossierCount++;
-
-                    if(dossierNumberInput == dossierCount)
-                    {
-                        itemKey = item.Key;
-                    }
-                }
-                persons.Remove(itemKey);
-            }
+            if(persons.ContainsKey(dossierKeyInput))
+                persons.Remove(dossierKeyInput);
         }
     }
 }
