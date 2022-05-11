@@ -87,6 +87,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedDynamicArray", "Adv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedPersonnelAccounting", "AdvancedPersonnelAccounting\AdvancedPersonnelAccounting.csproj", "{03128CDF-BFCE-4CF8-920C-93532AD4D196}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MergingCollections", "MergingCollections\MergingCollections.csproj", "{665A3B18-9255-447F-9F34-9A287CA79649}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -241,6 +243,10 @@ Global
 		{03128CDF-BFCE-4CF8-920C-93532AD4D196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03128CDF-BFCE-4CF8-920C-93532AD4D196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03128CDF-BFCE-4CF8-920C-93532AD4D196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{665A3B18-9255-447F-9F34-9A287CA79649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{665A3B18-9255-447F-9F34-9A287CA79649}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{665A3B18-9255-447F-9F34-9A287CA79649}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{665A3B18-9255-447F-9F34-9A287CA79649}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -280,6 +286,7 @@ Global
 		{7E67B796-F8B3-4914-95E8-8F25314B3794} = {F34A7781-EA75-4A9B-AEC0-6071AF44DF4C}
 		{6D25A5FA-7316-4B67-8094-36968E7BAE9C} = {F34A7781-EA75-4A9B-AEC0-6071AF44DF4C}
 		{03128CDF-BFCE-4CF8-920C-93532AD4D196} = {F34A7781-EA75-4A9B-AEC0-6071AF44DF4C}
+		{665A3B18-9255-447F-9F34-9A287CA79649} = {F34A7781-EA75-4A9B-AEC0-6071AF44DF4C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28DD9957-988B-4D3F-B65D-FAC8491DFCAD}
