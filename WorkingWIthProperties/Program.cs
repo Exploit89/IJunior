@@ -16,14 +16,14 @@ namespace WorkingWIthProperties
 
     class Player
     {
+        public int PositionX { get; private set; }
+        public int PositionY { get; private set; }
+
         public Player()
         {
             PositionX = 5;
             PositionY = 3;
         }
-
-        public int PositionX { get; private set; }
-        public int PositionY { get; private set; }
 
         public void DrawPlayer(char playerCharacter = '@')
         {

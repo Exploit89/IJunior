@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingWithClasses", "Worki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingWIthProperties", "WorkingWIthProperties\WorkingWIthProperties.csproj", "{20C65FD5-B690-46D8-B8DE-A12EEABB4D69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayersDatabase", "PlayersDatabase\PlayersDatabase.csproj", "{DC815FC4-5EC8-48BA-89F3-D356163F6874}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -261,6 +263,10 @@ Global
 		{20C65FD5-B690-46D8-B8DE-A12EEABB4D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20C65FD5-B690-46D8-B8DE-A12EEABB4D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20C65FD5-B690-46D8-B8DE-A12EEABB4D69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC815FC4-5EC8-48BA-89F3-D356163F6874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC815FC4-5EC8-48BA-89F3-D356163F6874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC815FC4-5EC8-48BA-89F3-D356163F6874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC815FC4-5EC8-48BA-89F3-D356163F6874}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -303,6 +309,7 @@ Global
 		{665A3B18-9255-447F-9F34-9A287CA79649} = {F34A7781-EA75-4A9B-AEC0-6071AF44DF4C}
 		{6FFF1089-804B-4F96-B86A-17518E1BD4BC} = {8032D877-0284-4C07-8E82-28150C815FC6}
 		{20C65FD5-B690-46D8-B8DE-A12EEABB4D69} = {8032D877-0284-4C07-8E82-28150C815FC6}
+		{DC815FC4-5EC8-48BA-89F3-D356163F6874} = {8032D877-0284-4C07-8E82-28150C815FC6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28DD9957-988B-4D3F-B65D-FAC8491DFCAD}
