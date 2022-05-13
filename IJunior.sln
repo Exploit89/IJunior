@@ -95,7 +95,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingWithClasses", "Worki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingWIthProperties", "WorkingWIthProperties\WorkingWIthProperties.csproj", "{20C65FD5-B690-46D8-B8DE-A12EEABB4D69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayersDatabase", "PlayersDatabase\PlayersDatabase.csproj", "{DC815FC4-5EC8-48BA-89F3-D356163F6874}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayersDB", "PlayersDatabase\PlayersDB.csproj", "{DC815FC4-5EC8-48BA-89F3-D356163F6874}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
