@@ -31,7 +31,7 @@ namespace PlayersDB
             //AddPlayerToDatabase(playersDatabase);
             //AddPlayerToDatabase(playersDatabase);
 
-            playersDatabase.ShowAllPlayers(player.GetPlayerID());
+            playersDatabase.ShowAllPlayers(Player.GetPlayerID());
             
 
         }
@@ -72,22 +72,22 @@ namespace PlayersDB
 
     class Player
     {
-        private List<string> _playersID;
+        private List<string> _playersID = new List<string>();
 
+        public string PlayerID { get; private set; }
         public string Nickname { get; private set; }
         public int Level { get; private set; }
         public bool IsBanned { get; private set; }
 
         public Player(string nickname, int level)
         {
-            _playersID = new List<string>();
-            _playersID.Add(CreatePlayerID(_playersID));
+            PlayerID = CreatePlayerID();
             Nickname = nickname;
             Level = level;
             IsBanned = false;
         }
         
-        private string CreatePlayerID(List<string> PlayersID)
+        private string CreatePlayerID()
         {
             string playerID = "";
             bool isChecking = true;
@@ -97,16 +97,17 @@ namespace PlayersDB
             {
                 playerID = Convert.ToString(random.Next(0, 5000));
 
-                if (CheckPlayerIDAvaliable(playerID, PlayersID))
+                if (CheckPlayerIDAvaliable(playerID))
                     isChecking = false;
             }
 
+            _playersID.Add(playerID);
             return playerID;
         }
 
-        private bool CheckPlayerIDAvaliable(string playerID, List<string> PlayersID)
+        private bool CheckPlayerIDAvaliable(string playerID)
         {
-            while (PlayersID.Contains(playerID))
+            while (_playersID.Contains(playerID))
             {
                 return false;
             }
@@ -115,8 +116,7 @@ namespace PlayersDB
 
         public List<string> GetPlayerID()
         {
-            List<string> playerIDs = _playersID;
-            return playerIDs;
+            return _playersID;
         }
     }
 }
