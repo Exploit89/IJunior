@@ -7,86 +7,198 @@ namespace PlayersDB
     {
         static void Main(string[] args)
         {
-            string nicknameInput = "";
-            int levelInput = 0;
             PlayersDatabase playersDatabase = new PlayersDatabase();
-            Player player = new Player(nicknameInput, levelInput);
-
-            Console.WriteLine("Введите имя");
-            nicknameInput = Console.ReadLine();
-            Console.WriteLine("Введите уровень");
-            levelInput = Convert.ToInt32(Console.ReadLine());
-
-            player = new Player(nicknameInput, levelInput);
-            playersDatabase.AddPlayer(player);
-
-            Console.WriteLine("Введите имя");
-            nicknameInput = Console.ReadLine();
-            Console.WriteLine("Введите уровень");
-            levelInput = Convert.ToInt32(Console.ReadLine());
-
-            player = new Player(nicknameInput, levelInput);
-            playersDatabase.AddPlayer(player);
-
-            //AddPlayerToDatabase(playersDatabase);
-            //AddPlayerToDatabase(playersDatabase);
-
-            playersDatabase.ShowAllPlayers(Player.GetPlayerID());
-            
-
-        }
-
-        static void AddPlayerToDatabase(PlayersDatabase playersDatabase)
-        {
-
+            playersDatabase.WorkingDatabase(playersDatabase);
         }
     }
 
     class PlayersDatabase
     {
-        private List<Player> _players;
+        private Dictionary<string, Player> _playersIDs = new Dictionary<string, Player>();
 
-        public PlayersDatabase()
+        public void WorkingDatabase(PlayersDatabase playersDatabase)
         {
-            _players = new List<Player>();
-        }
+            bool isWorking = true;
+            string userAnyInput;
+            int userInput = 0;
 
-        public void AddPlayer(Player player)
-        {
-            _players.Add(player);
-        }
-
-        public void DeletePlayer(Player player)
-        {
-            _players.Remove(player);
-        }
-
-        public void ShowAllPlayers(List<string> playerID)
-        {
-            for(int i = 0; i < _players.Count; i++)
+            while (isWorking)
             {
-                Console.Write($"ID: {playerID[i]} - {_players[i].Nickname} - {_players[i].Level} - {_players[i].IsBanned}");
+                Console.WriteLine("База данных игроков\n\n" +
+                    "Меню:\n" +
+                    "1 - Добавить игрока\n" +
+                    "2 - Удалить игрока\n" +
+                    "3 - Забанить игрока\n" +
+                    "4 - Разбанить игрока\n" +
+                    "5 - Показать всех игроков\n" +
+                    "6 - Выход");
+                userAnyInput = Console.ReadLine();
+
+                if (CheckNumberInput(userAnyInput))
+                    userInput = Convert.ToInt32(userAnyInput);
+
+                switch (userInput)
+                {
+                    case 1:
+                        playersDatabase.AddPlayer();
+                        break;
+                    case 2:
+                        playersDatabase.DeletePlayer();
+                        break;
+                    case 3:
+                        playersDatabase.BanPlayer();
+                        break;
+                    case 4:
+                        playersDatabase.UnbanPlayer();
+                        break;
+                    case 5:
+                        playersDatabase.ShowAllPlayers();
+                        break;
+                    case 6:
+                        isWorking = false;
+                        break;
+                    default:
+                        Console.WriteLine("Такой команды не существует. Попробуйте снова.\n");
+                        break;
+                }
             }
+        }
+
+        private bool CheckNumberInput(string userInput)
+        {
+            if (int.TryParse(userInput, out int number) && number >= 0 && number <= 100)
+                return true;
+            else
+                return false;
+        }
+
+        public void AddPlayer()
+        {
+            int levelNumber;
+            Console.Write("Введите никнейм игрока: ");
+            string inputNickname = Console.ReadLine();
+            Console.Write("Введите уровень игрока: ");
+            string inputLevel = Console.ReadLine();
+
+            if (CheckLevelInput(inputLevel))
+            {
+                levelNumber = Convert.ToInt32(inputLevel);
+                Player player = new Player(inputNickname, levelNumber);
+                _playersIDs.Add(player.PlayerID, player);
+                Console.Clear();
+                Console.WriteLine($"Игрок {inputNickname} {inputLevel} уровня успешно добавлен.\n");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Введен некорректный уровень\n" +
+                    "Требуется ввести целое число от 0 до 100\n");
+            }
+        }
+
+        private bool CheckLevelInput(string inputLevel)
+        {
+            if (int.TryParse(inputLevel, out int number) && number >= 0 && number <= 100)
+                return true;
+            else
+                return false;
+        }
+
+        public void DeletePlayer()
+        {
+            Console.Write("Введите ID игрока, которого хотите удалить: ");
+            string playerID = Console.ReadLine();
+
+            if (CheckContainsID(playerID))
+            {
+                _playersIDs.Remove(playerID);
+                Console.Clear();
+                Console.WriteLine($"Игрок с ID {playerID} успешно удалён.\n");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Такого ID игрока не существует\n");
+            }
+        }
+
+        public void BanPlayer()
+        {
+            Console.Write("Введите ID игрока, которого хотите забанить: ");
+            string playerID = Console.ReadLine();
+
+            if (CheckContainsID(playerID))
+            {
+                _playersIDs[playerID].IsBanned = true;
+                Console.Clear();
+                Console.WriteLine($"Игрок с ID {playerID} успешно забанен.\n");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Такого ID игрока не существует\n");
+            }
+        }
+
+        public void UnbanPlayer()
+        {
+            Console.Write("Введите ID игрока, которого хотите разбанить: ");
+            string playerID = Console.ReadLine();
+
+            if (CheckContainsID(playerID))
+            {
+                _playersIDs[playerID].IsBanned = false;
+                Console.Clear();
+                Console.WriteLine($"Игрок с ID {playerID} успешно разбанен.\n");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Такого ID игрока не существует\n");
+            }
+        }
+
+        private bool CheckContainsID(string playerID)
+        {
+            if (_playersIDs.ContainsKey(playerID))
+                return true;
+            else
+                return false;
+        }
+
+        public void ShowAllPlayers()
+        {
+            Console.Clear();
+
+            foreach (var item in _playersIDs)
+            {
+                if (item.Value.IsBanned)
+                    Console.WriteLine($"ID:{item.Key} - Никнейм: {item.Value.Nickname} - Уровень: {item.Value.Level} - Статус: Забанен");
+                else
+                    Console.WriteLine($"ID:{item.Key} - Никнейм: {item.Value.Nickname} - Уровень: {item.Value.Level} - Статус: Активен");
+            }
+
+            Console.WriteLine();
         }
     }
 
     class Player
     {
-        private List<string> _playersID = new List<string>();
+        private List<string> _playersIDs = new List<string>();
 
-        public string PlayerID { get; private set; }
         public string Nickname { get; private set; }
         public int Level { get; private set; }
-        public bool IsBanned { get; private set; }
+        public string PlayerID { get; private set; }
+        public bool IsBanned { get; set; }
 
         public Player(string nickname, int level)
         {
-            PlayerID = CreatePlayerID();
             Nickname = nickname;
             Level = level;
+            PlayerID = CreatePlayerID();
             IsBanned = false;
         }
-        
+
         private string CreatePlayerID()
         {
             string playerID = "";
@@ -101,22 +213,17 @@ namespace PlayersDB
                     isChecking = false;
             }
 
-            _playersID.Add(playerID);
+            _playersIDs.Add(playerID);
             return playerID;
         }
 
         private bool CheckPlayerIDAvaliable(string playerID)
         {
-            while (_playersID.Contains(playerID))
+            while (_playersIDs.Contains(playerID))
             {
                 return false;
             }
             return true;
-        }
-
-        public List<string> GetPlayerID()
-        {
-            return _playersID;
         }
     }
 }
