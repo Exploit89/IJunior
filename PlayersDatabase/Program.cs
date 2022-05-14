@@ -129,7 +129,7 @@ namespace PlayersDB
 
             if (CheckContainsID(playerID))
             {
-                _playersIDs[playerID].IsBanned = true;
+                _playersIDs[playerID].SetBanned();
                 Console.Clear();
                 Console.WriteLine($"Игрок с ID {playerID} успешно забанен.\n");
             }
@@ -147,7 +147,7 @@ namespace PlayersDB
 
             if (CheckContainsID(playerID))
             {
-                _playersIDs[playerID].IsBanned = false;
+                _playersIDs[playerID].SetUnbanned();
                 Console.Clear();
                 Console.WriteLine($"Игрок с ID {playerID} успешно разбанен.\n");
             }
@@ -189,7 +189,7 @@ namespace PlayersDB
         public string Nickname { get; private set; }
         public int Level { get; private set; }
         public string PlayerID { get; private set; }
-        public bool IsBanned { get; set; }
+        public bool IsBanned { get; private set; }
 
         public Player(string nickname, int level)
         {
@@ -224,6 +224,16 @@ namespace PlayersDB
                 return false;
             }
             return true;
+        }
+
+        public void SetBanned()
+        {
+            IsBanned = true;
+        }
+
+        public void SetUnbanned()
+        {
+            IsBanned = false;
         }
     }
 }
