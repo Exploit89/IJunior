@@ -9,7 +9,8 @@ namespace CardDeckProject
         {
             CardDeck cardDeck = new CardDeck();
             Player player = new Player();
-            cardDeck.PlayingGame(player);
+            Croupier croupier = new Croupier();
+            croupier.PlayGame(player, cardDeck);
         }
     }
 
@@ -36,44 +37,39 @@ namespace CardDeckProject
 
     class CardDeck
     {
-        private int _cardDeckMaxCount = 36;
         private List<Card> _cardDeck = new List<Card>();
-        private List<CardSuit> _cardSuit = new List<CardSuit>
-        {
-            CardSuit.Spades,
-            CardSuit.Heart,
-            CardSuit.Diamonds,
-            CardSuit.Clubs 
-        };
-        private List<CardRank> _cardRank = new List<CardRank>
-        {
-            CardRank.Six,
-            CardRank.Seven,
-            CardRank.Eight,
-            CardRank.Nine,
-            CardRank.Ten,
-            CardRank.Jack,
-            CardRank.Queen,
-            CardRank.King,
-            CardRank.Ace
-        };
+        private List<CardSuit> _cardSuits = new List<CardSuit>();
+        private List<CardRank> _cardRanks = new List<CardRank>();
 
-        public void Create()
+        public CardDeck()
         {
-            if(_cardDeck.Count < _cardDeckMaxCount)
+            _cardSuits.Add(CardSuit.Spades);
+            _cardSuits.Add(CardSuit.Heart);
+            _cardSuits.Add(CardSuit.Diamonds);
+            _cardSuits.Add(CardSuit.Clubs);
+
+            _cardRanks.Add(CardRank.Six);
+            _cardRanks.Add(CardRank.Seven);
+            _cardRanks.Add(CardRank.Eight);
+            _cardRanks.Add(CardRank.Nine);
+            _cardRanks.Add(CardRank.Ten);
+            _cardRanks.Add(CardRank.Jack);
+            _cardRanks.Add(CardRank.Queen);
+            _cardRanks.Add(CardRank.King);
+            _cardRanks.Add(CardRank.Ace);
+
+            foreach (var suit in _cardSuits)
             {
-                foreach (var suit in _cardSuit)
+                foreach (var rank in _cardRanks)
                 {
-                    foreach (var rank in _cardRank)
-                    {
-                        _cardDeck.Add(CreateCard(suit, rank));
-                    }
+                    _cardDeck.Add(CreateCard(suit, rank));
                 }
             }
-            else
-            {
-                Console.WriteLine("Колода уже существует.");
-            }
+        }
+
+        public List<Card> GetCardDeck()
+        {
+            return _cardDeck;
         }
 
         private Card CreateCard(CardSuit suit, CardRank rank)
@@ -81,90 +77,65 @@ namespace CardDeckProject
             Card card = new Card(suit, rank);
             return card;
         }
+    }
 
-        public void Show()
+    class Card
+    {
+        public CardSuit Suit { get; private set; }
+        public CardRank Rank { get; private set; }
+
+        public Card(CardSuit suit, CardRank rank)
         {
-            int i = 0;
-            foreach(var card in _cardDeck)
-                Console.WriteLine($"{i++} { card.Suit } - { card.Rank}");
+            Suit = suit;
+            Rank = rank;
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _cards = new List<Card>();
+
+        public void TakeCard(Card card)
+        {
+            _cards.Add(card);
         }
 
-        public void StopGame(Player player)
-        {
-            Console.WriteLine("Игра закончена.");
-            player.ShowCards();
-            Console.WriteLine("Нажмите любую клавишу для Новой игры.");
-            Console.ReadKey();
-            TakeAllCardsFrom(player);
-        }
-
-        public void Shuffle()
+        public void ShowCards()
         {
             Console.Clear();
-            Console.WriteLine("Колода перемешана.\n");
-
-            Random randomIndex = new Random();
-
-            for (int i = 0; i < _cardDeck.Count; i++)
+            if (_cards.Count > 0)
             {
-                int replacementIndex = randomIndex.Next(i + 1);
-                Card card = _cardDeck[replacementIndex];
-                _cardDeck.RemoveAt(replacementIndex);
-                _cardDeck.Add(card);
-            }
-        }
+                Console.WriteLine("У игрока на руках следующие карты:\n");
 
-        public void MoveCardTo(Player player)
-        {
-            if(_cardDeck.Count != 0)
-            {
-                Console.Clear();
-                Console.WriteLine("Игрок взял одну карту.\n");
-
-                Card card = GiveCard();
-                player.TakeCard(card);
-                DeleteCard();
+                foreach (var card in _cards)
+                    Console.WriteLine($"{card.Suit} - {card.Rank}");
             }
             else
             {
-                Console.WriteLine("Вы забрали себе все карты из колоды. И зачем? >:/ ");
+                Console.WriteLine("Вы не взяли ни одной карты.");
             }
+            Console.WriteLine();
         }
 
-        public void TakeAllCardsFrom(Player player)
+        public List<Card> ReturnAllCards()
         {
-            Console.Clear();
-            Console.WriteLine("Все карты возвращены в колоду.\n");
-
-            List<Card> playerCards = player.ReturnAllCards();
-
-            foreach(var card in playerCards)
-            {
-                TakeCard(card);
-            }
+            List<Card> cardsToReturn = new List<Card>();
+            cardsToReturn = _cards;
+            _cards.Clear();
+            return cardsToReturn;
         }
+    }
 
-        private Card GiveCard()
-        {
-            return _cardDeck[0];
-        }
+    class Croupier
+    {
+        private List<Card> _cardDeck = new List<Card>();
 
-        private void DeleteCard()
+        public void PlayGame(Player player, CardDeck cardDeck)
         {
-            _cardDeck.RemoveAt(0);
-        }
-
-        private void TakeCard(Card card)
-        {
-            _cardDeck.Add(card);
-        }
-
-        public void PlayingGame(Player player)
-        {
+            _cardDeck = cardDeck.GetCardDeck();
             bool isGaming = true;
             string userAnyInput;
             int userInput = 0;
-            Create();
             Shuffle();
 
             while (isGaming)
@@ -206,10 +177,20 @@ namespace CardDeckProject
             }
         }
 
-        private void ShowDefaultMessage()
+        private void Shuffle()
         {
             Console.Clear();
-            Console.WriteLine("Такой команды не существует. Попробуйте снова.\n");
+            Console.WriteLine("Колода перемешана.\n");
+
+            Random randomIndex = new Random();
+
+            for (int i = 0; i < _cardDeck.Count; i++)
+            {
+                int replacementIndex = randomIndex.Next(i + 1);
+                Card card = _cardDeck[replacementIndex];
+                _cardDeck.RemoveAt(replacementIndex);
+                _cardDeck.Add(card);
+            }
         }
 
         private bool CheckNumberInput(string userInput)
@@ -219,52 +200,66 @@ namespace CardDeckProject
             else
                 return false;
         }
-    }
 
-    class Card
-    {
-        public CardSuit Suit { get; private set; }
-        public CardRank Rank { get; private set; }
-
-        public Card(CardSuit suit, CardRank rank)
+        private void MoveCardTo(Player player)
         {
-            Suit = suit;
-            Rank = rank;
-        }
-    }
 
-    class Player
-    {
-        private List<Card> _playerCards = new List<Card>();
-
-        public void TakeCard(Card card)
-        {
-            _playerCards.Add(card);
-        }
-
-        public void ShowCards()
-        {
-            Console.Clear();
-            if(_playerCards.Count > 0)
+            if (_cardDeck.Count != 0)
             {
-                Console.WriteLine("У игрока на руках следующие карты:\n");
+                Console.Clear();
+                Console.WriteLine("Игрок взял одну карту.\n");
 
-                foreach (var card in _playerCards)
-                    Console.WriteLine($"{card.Suit} - {card.Rank}");
+                Card card = GiveCard();
+                player.TakeCard(card);
+                DeleteCard();
             }
             else
             {
-                Console.WriteLine("Вы не взяли ни одной карты.");
+                Console.WriteLine("Вы забрали себе все карты из колоды. И зачем? >:/ ");
             }
-            Console.WriteLine();
         }
 
-        public List<Card> ReturnAllCards()
+        private Card GiveCard()
         {
-            List<Card> cardsToReturn = new List<Card>();
-            cardsToReturn = _playerCards;
-            _playerCards.Clear();
-            return cardsToReturn;
+            return _cardDeck[0];
+        }
+
+        private void DeleteCard()
+        {
+            _cardDeck.RemoveAt(0);
+        }
+
+        private void StopGame(Player player)
+        {
+            Console.WriteLine("Игра закончена.");
+            player.ShowCards();
+            Console.WriteLine("Нажмите любую клавишу для Новой игры.");
+            Console.ReadKey();
+            TakeAllCardsFrom(player);
+        }
+
+        private void TakeAllCardsFrom(Player player)
+        {
+            Console.Clear();
+            Console.WriteLine("Все карты возвращены в колоду.\n");
+
+            List<Card> playerCards = player.ReturnAllCards();
+
+            foreach (var card in playerCards)
+            {
+                TakeCard(card);
+            }
+        }
+
+        private void TakeCard(Card card)
+        {
+            _cardDeck.Add(card);
+        }
+
+        private void ShowDefaultMessage()
+        {
+            Console.Clear();
+            Console.WriteLine("Такой команды не существует. Попробуйте снова.\n");
         }
     }
 }

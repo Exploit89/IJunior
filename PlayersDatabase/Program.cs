@@ -19,8 +19,7 @@ namespace PlayersDB
         public void Work()
         {
             bool isWorking = true;
-            string userAnyInput;
-            int userInput = 0;
+            string userInput;
 
             while (isWorking)
             {
@@ -32,29 +31,26 @@ namespace PlayersDB
                     "4 - Разбанить игрока\n" +
                     "5 - Показать всех игроков\n" +
                     "6 - Выход");
-                userAnyInput = Console.ReadLine();
-
-                if (isNumber(userAnyInput))
-                    userInput = Convert.ToInt32(userAnyInput);
+                userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
-                    case 1:
+                    case "1":
                         AddPlayer();
                         break;
-                    case 2:
+                    case "2":
                         DeletePlayer();
                         break;
-                    case 3:
+                    case "3":
                         BanPlayer();
                         break;
-                    case 4:
+                    case "4":
                         UnbanPlayer();
                         break;
-                    case 5:
+                    case "5":
                         ShowAllPlayers();
                         break;
-                    case 6:
+                    case "6":
                         isWorking = false;
                         break;
                     default:
@@ -62,12 +58,6 @@ namespace PlayersDB
                         break;
                 }
             }
-        }
-
-        private bool isNumber(string userInput)
-        {
-            int maximumLevel = 100;
-            return int.TryParse(userInput, out int number) && number >= 0 && number <= maximumLevel;
         }
 
         private void AddPlayer()
@@ -78,12 +68,12 @@ namespace PlayersDB
             Console.Write("Введите уровень игрока: ");
             string inputLevel = Console.ReadLine();
 
-            if (CheckLevelInput(inputLevel))
+            if (IsCorrect(inputLevel))
             {
                 levelNumber = Convert.ToInt32(inputLevel);
                 string playerID = CreatePlayerID();
                 Player player = new Player(inputNickname, levelNumber, playerID);
-                _players.Add(player.PlayerID, player);
+                _players.Add(player.ID, player);
                 Console.Clear();
                 Console.WriteLine($"Игрок {inputNickname} {inputLevel} уровня успешно добавлен.\n");
             }
@@ -95,9 +85,10 @@ namespace PlayersDB
             }
         }
 
-        private bool CheckLevelInput(string inputLevel)
+        private bool IsCorrect(string inputLevel)
         {
-            if (int.TryParse(inputLevel, out int number) && number >= 0 && number <= 100)
+            int maxPlayerLevel = 100;
+            if (int.TryParse(inputLevel, out int number) && number >= 0 && number <= maxPlayerLevel)
                 return true;
             else
                 return false;
@@ -108,7 +99,7 @@ namespace PlayersDB
             Console.Write("Введите ID игрока, которого хотите удалить: ");
             string playerID = Console.ReadLine();
 
-            if (CheckContainsID(playerID))
+            if (ContainsID(playerID))
             {
                 _players.Remove(playerID);
                 Console.Clear();
@@ -126,7 +117,7 @@ namespace PlayersDB
             Console.Write("Введите ID игрока, которого хотите забанить: ");
             string playerID = Console.ReadLine();
 
-            if (CheckContainsID(playerID))
+            if (ContainsID(playerID))
             {
                 _players[playerID].Ban();
                 Console.Clear();
@@ -144,7 +135,7 @@ namespace PlayersDB
             Console.Write("Введите ID игрока, которого хотите разбанить: ");
             string playerID = Console.ReadLine();
 
-            if (CheckContainsID(playerID))
+            if (ContainsID(playerID))
             {
                 _players[playerID].Unban();
                 Console.Clear();
@@ -157,24 +148,24 @@ namespace PlayersDB
             }
         }
 
-        private bool CheckContainsID(string playerID)
+        private bool ContainsID(string playerID)
         {
-            if (_players.ContainsKey(playerID))
-                return true;
-            else
-                return false;
+            return _players.ContainsKey(playerID);
         }
 
         private void ShowAllPlayers()
         {
             Console.Clear();
+            string bannedText;
 
             foreach (var item in _players)
             {
                 if (item.Value.IsBanned)
-                    Console.WriteLine($"ID:{item.Key} - Никнейм: {item.Value.Nickname} - Уровень: {item.Value.Level} - Статус: Забанен");
+                    bannedText = "Забанен";
                 else
-                    Console.WriteLine($"ID:{item.Key} - Никнейм: {item.Value.Nickname} - Уровень: {item.Value.Level} - Статус: Активен");
+                    bannedText = "Активен";
+
+                Console.WriteLine($"ID: {item.Key} - Никнейм: {item.Value.Nickname} - Уровень: {item.Value.Level} - Статус: {bannedText}");
             }
 
             Console.WriteLine();
@@ -183,27 +174,21 @@ namespace PlayersDB
         private string CreatePlayerID()
         {
             string playerID = "";
-            bool isChecking = true;
+            bool isTaken = true;
             Random random = new Random();
 
-            while (isChecking)
+            while (isTaken)
             {
                 playerID = Convert.ToString(random.Next(0, 5000));
-
-                if (IsPlayerIDAvaliable(playerID))
-                    isChecking = false;
+                isTaken = IsPlayerIDTaken(playerID);
             }
 
             return playerID;
         }
 
-        private bool IsPlayerIDAvaliable(string playerID)
+        private bool IsPlayerIDTaken(string playerID)
         {
-            while (_players.ContainsKey(playerID))
-            {
-                return false;
-            }
-            return true;
+            return _players.ContainsKey(playerID);
         }
     }
 
@@ -211,14 +196,14 @@ namespace PlayersDB
     {
         public string Nickname { get; private set; }
         public int Level { get; private set; }
-        public string PlayerID { get; private set; }
+        public string ID { get; private set; }
         public bool IsBanned { get; private set; }
 
         public Player(string nickname, int level, string playerID)
         {
             Nickname = nickname;
             Level = level;
-            PlayerID = playerID;
+            ID = playerID;
             IsBanned = false;
         }
 
