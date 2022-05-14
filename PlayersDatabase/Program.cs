@@ -8,7 +8,7 @@ namespace PlayersDB
         static void Main(string[] args)
         {
             PlayersDatabase playersDatabase = new PlayersDatabase();
-            playersDatabase.WorkingDatabase(playersDatabase);
+            playersDatabase.Work();
         }
     }
 
@@ -16,7 +16,7 @@ namespace PlayersDB
     {
         private Dictionary<string, Player> _playersIDs = new Dictionary<string, Player>();
 
-        public void WorkingDatabase(PlayersDatabase playersDatabase)
+        public void Work()
         {
             bool isWorking = true;
             string userAnyInput;
@@ -34,25 +34,25 @@ namespace PlayersDB
                     "6 - Выход");
                 userAnyInput = Console.ReadLine();
 
-                if (CheckNumberInput(userAnyInput))
+                if (isNumber(userAnyInput))
                     userInput = Convert.ToInt32(userAnyInput);
 
                 switch (userInput)
                 {
                     case 1:
-                        playersDatabase.AddPlayer();
+                        AddPlayer();
                         break;
                     case 2:
-                        playersDatabase.DeletePlayer();
+                        DeletePlayer();
                         break;
                     case 3:
-                        playersDatabase.BanPlayer();
+                        BanPlayer();
                         break;
                     case 4:
-                        playersDatabase.UnbanPlayer();
+                        UnbanPlayer();
                         break;
                     case 5:
-                        playersDatabase.ShowAllPlayers();
+                        ShowAllPlayers();
                         break;
                     case 6:
                         isWorking = false;
@@ -64,15 +64,13 @@ namespace PlayersDB
             }
         }
 
-        private bool CheckNumberInput(string userInput)
+        private bool isNumber(string userInput)
         {
-            if (int.TryParse(userInput, out int number) && number >= 0 && number <= 100)
-                return true;
-            else
-                return false;
+            int maximumLevel = 100;
+              return int.TryParse(userInput, out int number) && number >= 0 && number <= maximumLevel;
         }
 
-        public void AddPlayer()
+        private void AddPlayer()
         {
             int levelNumber;
             Console.Write("Введите никнейм игрока: ");
@@ -104,7 +102,7 @@ namespace PlayersDB
                 return false;
         }
 
-        public void DeletePlayer()
+        private void DeletePlayer()
         {
             Console.Write("Введите ID игрока, которого хотите удалить: ");
             string playerID = Console.ReadLine();
@@ -122,14 +120,14 @@ namespace PlayersDB
             }
         }
 
-        public void BanPlayer()
+        private void BanPlayer()
         {
             Console.Write("Введите ID игрока, которого хотите забанить: ");
             string playerID = Console.ReadLine();
 
             if (CheckContainsID(playerID))
             {
-                _playersIDs[playerID].SetBanned();
+                _playersIDs[playerID].Ban();
                 Console.Clear();
                 Console.WriteLine($"Игрок с ID {playerID} успешно забанен.\n");
             }
@@ -140,14 +138,14 @@ namespace PlayersDB
             }
         }
 
-        public void UnbanPlayer()
+        private void UnbanPlayer()
         {
             Console.Write("Введите ID игрока, которого хотите разбанить: ");
             string playerID = Console.ReadLine();
 
             if (CheckContainsID(playerID))
             {
-                _playersIDs[playerID].SetUnbanned();
+                _playersIDs[playerID].Unban();
                 Console.Clear();
                 Console.WriteLine($"Игрок с ID {playerID} успешно разбанен.\n");
             }
@@ -166,7 +164,7 @@ namespace PlayersDB
                 return false;
         }
 
-        public void ShowAllPlayers()
+        private void ShowAllPlayers()
         {
             Console.Clear();
 
@@ -226,12 +224,12 @@ namespace PlayersDB
             return true;
         }
 
-        public void SetBanned()
+        public void Ban()
         {
             IsBanned = true;
         }
 
-        public void SetUnbanned()
+        public void Unban()
         {
             IsBanned = false;
         }
