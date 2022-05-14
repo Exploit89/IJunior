@@ -8,10 +8,8 @@ namespace CardDeckProject
         static void Main(string[] args)
         {
             CardDeck cardDeck = new CardDeck();
-            cardDeck.Create();
-            cardDeck.Shuffle();
-            cardDeck.Show();
-            
+            Player player = new Player();
+            cardDeck.PlayingGame(player);
         }
     }
 
@@ -91,8 +89,20 @@ namespace CardDeckProject
                 Console.WriteLine($"{i++} { card.Suit } - { card.Rank}");
         }
 
+        public void StopGame(Player player)
+        {
+            Console.WriteLine("Игра закончена.");
+            player.ShowCards();
+            Console.WriteLine("Нажмите любую клавишу для Новой игры.");
+            Console.ReadKey();
+            TakeAllCardsFrom(player);
+        }
+
         public void Shuffle()
         {
+            Console.Clear();
+            Console.WriteLine("Колода перемешана.\n");
+
             Random randomIndex = new Random();
 
             for (int i = 0; i < _cardDeck.Count; i++)
@@ -102,6 +112,112 @@ namespace CardDeckProject
                 _cardDeck.RemoveAt(replacementIndex);
                 _cardDeck.Add(card);
             }
+        }
+
+        public void MoveCardTo(Player player)
+        {
+            if(_cardDeck.Count != 0)
+            {
+                Console.Clear();
+                Console.WriteLine("Игрок взял одну карту.\n");
+
+                Card card = GiveCard();
+                player.TakeCard(card);
+                DeleteCard();
+            }
+            else
+            {
+                Console.WriteLine("Вы забрали себе все карты из колоды. И зачем? >:/ ");
+            }
+        }
+
+        public void TakeAllCardsFrom(Player player)
+        {
+            Console.Clear();
+            Console.WriteLine("Все карты возвращены в колоду.\n");
+
+            List<Card> playerCards = player.ReturnAllCards();
+
+            foreach(var card in playerCards)
+            {
+                TakeCard(card);
+            }
+        }
+
+        private Card GiveCard()
+        {
+            return _cardDeck[0];
+        }
+
+        private void DeleteCard()
+        {
+            _cardDeck.RemoveAt(0);
+        }
+
+        private void TakeCard(Card card)
+        {
+            _cardDeck.Add(card);
+        }
+
+        public void PlayingGame(Player player)
+        {
+            bool isGaming = true;
+            string userAnyInput;
+            int userInput = 0;
+            Create();
+            Shuffle();
+
+            while (isGaming)
+            {
+                Console.WriteLine(
+                    "Меню:\n" +
+                    "1 - Взять карту из колоды\n" +
+                    "2 - Достаточно карт!\n" +
+                    "3 - Вернуть карты в колоду(сброс)\n" +
+                    "4 - Перемешать колоду\n" +
+                    "5 - Выход");
+
+                userAnyInput = Console.ReadLine();
+
+                if (CheckNumberInput(userAnyInput))
+                    userInput = Convert.ToInt32(userAnyInput);
+
+                switch (userInput)
+                {
+                    case 1:
+                        MoveCardTo(player);
+                        break;
+                    case 2:
+                        StopGame(player);
+                        break;
+                    case 3:
+                        TakeAllCardsFrom(player);
+                        break;
+                    case 4:
+                        Shuffle();
+                        break;
+                    case 5:
+                        isGaming = false;
+                        break;
+                    default:
+                        ShowDefaultMessage();
+                        break;
+                }
+            }
+        }
+
+        private void ShowDefaultMessage()
+        {
+            Console.Clear();
+            Console.WriteLine("Такой команды не существует. Попробуйте снова.\n");
+        }
+
+        private bool CheckNumberInput(string userInput)
+        {
+            if (int.TryParse(userInput, out int number))
+                return true;
+            else
+                return false;
         }
     }
 
@@ -119,6 +235,36 @@ namespace CardDeckProject
 
     class Player
     {
+        private List<Card> _playerCards = new List<Card>();
 
+        public void TakeCard(Card card)
+        {
+            _playerCards.Add(card);
+        }
+
+        public void ShowCards()
+        {
+            Console.Clear();
+            if(_playerCards.Count > 0)
+            {
+                Console.WriteLine("У игрока на руках следующие карты:\n");
+
+                foreach (var card in _playerCards)
+                    Console.WriteLine($"{card.Suit} - {card.Rank}");
+            }
+            else
+            {
+                Console.WriteLine("Вы не взяли ни одной карты.");
+            }
+            Console.WriteLine();
+        }
+
+        public List<Card> ReturnAllCards()
+        {
+            List<Card> cardsToReturn = new List<Card>();
+            cardsToReturn = _playerCards;
+            _playerCards.Clear();
+            return cardsToReturn;
+        }
     }
 }
