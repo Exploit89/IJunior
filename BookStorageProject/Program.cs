@@ -30,8 +30,9 @@ namespace BookStorageProject
             _books = new List<Book>();
         }
 
-        public void AddBook(Book book)
+        public void AddBook()
         {
+            library.
             _books.Add(book);
         }
 
@@ -112,16 +113,26 @@ namespace BookStorageProject
             BookStorage bookStorage = new BookStorage();
         }
 
-        public void Open()
+        public void Open(BookStorage bookStorage)
         {
             bool isOpen = true;
             string userInput = "";
 
             while (isOpen)
             {
+                Console.WriteLine("Библиотека\n\n" +
+                    "Меню:\n" +
+                    "1 - Добавить книгу\n" +
+                    "2 - Удалить книгу\n" +
+                    "3 - Показать все книги\n" +
+                    "4 - Выбрать книгу по...\n" +
+                    "5 - Выход\n");
+                userInput = Console.ReadLine();
+
                 switch (userInput)
                 {
                     case "1":
+                        bookStorage.AddBook();
                         break;
                     case "2":
                         break;
@@ -135,6 +146,13 @@ namespace BookStorageProject
                         break;
                 }
             }
+        }
+
+        public Book CreateBook()
+        {
+
+            Book book = new Book(author, name, year, genre);
+            return book;
         }
     }
 
