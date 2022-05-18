@@ -9,34 +9,6 @@ namespace Store
         {
             Shop shop = new Shop();
             Cart cart = new Cart();
-            shop.ShowGoods();
-            Console.WriteLine();
-            shop.GiveProduct(Goods.Apple, 3);
-            shop.ShowGoods();
-        }
-
-        class Product
-        {
-            public Goods Name { get; private set; }
-            public int Price { get; private set; }
-            public int Quantity { get; private set; }
-
-            public Product(Goods name, int price, int quantity = 1)
-            {
-                Name = name;
-                Price = price;
-                Quantity = quantity;
-            }
-
-            public void ReduceQuantity(int quantity)
-            {
-                Quantity -= quantity;
-            }
-        }
-
-        class Cart
-        {
-            private List<Product> _goods = new List<Product>();
         }
 
         class Shop
@@ -44,9 +16,16 @@ namespace Store
             private List<Goods> _goodsNames = new List<Goods>();
             private List<Product> _goods = new List<Product>();
             private float _cash;
+            private int _minPrice = 10;
+            private int _maxPrice = 100;
+            private int _minQuantity = 5;
+            private int _maxQuantity = 20;
+
 
             public Shop()
             {
+                Random random = new Random();
+
                 _goodsNames.Add(Goods.Water);
                 _goodsNames.Add(Goods.Apple);
                 _goodsNames.Add(Goods.Cheese);
@@ -55,7 +34,9 @@ namespace Store
 
                 foreach (var productName in _goodsNames)
                 {
-                    _goods.Add(new Product(productName, 100, 25));
+                    int randomPrice = random.Next(_minPrice, _maxPrice);
+                    int randomQuantity = random.Next(_minQuantity, _maxQuantity);
+                    _goods.Add(new Product(productName, randomPrice, randomQuantity));
                 }
             }
 
@@ -70,7 +51,13 @@ namespace Store
                 product.ReduceQuantity(quantity);
             }
 
-            private Product GetProduct(Goods productName)
+            public void TakeProduct(Goods productName, int quantity)
+            {
+                Product product = GetProduct(productName);
+                product.IncreaseQuantity(quantity);
+            }
+
+            public Product GetProduct(Goods productName)
             {
                 Product product = null;
 
@@ -89,6 +76,69 @@ namespace Store
                 {
                     Console.WriteLine($"{item.Name} - {item.Price} - {item.Quantity}");
                 }
+            }
+        }
+
+        class Cart : Shop
+        {
+            private List<Product> _goods = new List<Product>();
+
+            public Cart()
+            {
+                Random random = new Random();
+
+                _goodsNames.Add(Goods.Water);
+                _goodsNames.Add(Goods.Apple);
+                _goodsNames.Add(Goods.Cheese);
+                _goodsNames.Add(Goods.Meat);
+                _goodsNames.Add(Goods.Bread);
+
+                foreach (var productName in _goodsNames)
+                {
+                    _goods.Add(new Product(productName, randomPrice, randomQuantity));
+                }
+            }
+
+            new public void ShowGoods()
+            {
+                int sum = 0;
+
+                foreach (var item in _goods)
+                {
+                    sum += item.Price * item.Quantity;
+                    Console.WriteLine($"{item.Name} - {item.Price} - {item.Quantity}");
+                }
+
+                Console.WriteLine($"Сумма покупок: {sum}");
+            }
+        }
+
+        class Customer
+        {
+
+        }
+
+        class Product
+        {
+            public Goods Name { get; private set; }
+            public int Price { get; private set; }
+            public int Quantity { get; private set; }
+
+            public Product(Goods name, int price, int quantity = 0)
+            {
+                Name = name;
+                Price = price;
+                Quantity = quantity;
+            }
+
+            public void ReduceQuantity(int quantity)
+            {
+                Quantity -= quantity;
+            }
+
+            public void IncreaseQuantity(int quantity)
+            {
+                Quantity += quantity;
             }
         }
 
