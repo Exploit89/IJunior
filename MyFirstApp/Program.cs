@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MyFirstApp
 {
@@ -6,33 +7,85 @@ namespace MyFirstApp
     {
         static void Main(string[] args)
         {
-            DrawBar(40);
+            Shop shop = new Shop();
+            Cart cart = new Cart();
+            shop.ShowGoods();
+            Console.WriteLine();
+            shop.GiveProduct("apple", 3);
+            shop.ShowGoods();
         }
 
-        static void DrawBar(int value)
+        class Product
         {
-            char fillSymbol = '#';
-            char emptySymbol = '_';
-            int maxHealth = 20;
-            float health = maxHealth / 100 * value;
-            string bar = "";
+            public string Name { get; private set; }
+            public int Price { get; private set; }
+            public int Quantity { get; private set; }
 
-            for (int i = 0; i < health; i++)
+            public Product(string name, int price, int quantity = 1)
             {
-                bar += fillSymbol;
+                Name = name;
+                Price = price;
+                Quantity = quantity;
             }
 
-            Console.SetCursorPosition(0, 0);
-            Console.Write('[');
-            Console.Write(bar);
-            bar = "";
-
-            for (float i = health; i < maxHealth; i++)
+            public void ReduceQuantity(int quantity)
             {
-                bar += emptySymbol;
+                Quantity -= quantity;
+            }
+        }
+
+        class Cart
+        {
+            private List<Product> _goods = new List<Product>();
+        }
+
+        class Shop
+        {
+            private List<Product> _goods = new List<Product>();
+            private float _cash;
+
+            public Shop()
+            {
+                _goods.Add(new Product("apple", 100, 25));
+                _goods.Add(new Product("bread", 50, 5));
             }
 
-            Console.Write(bar + ']');
+            public void GetCash(int cash)
+            {
+                _cash += cash;
+            }
+
+            public void GiveProduct(string productName, int quantity)
+            {
+                Product product = GetProduct(productName);
+                product.ReduceQuantity(quantity);
+            }
+
+            private Product GetProduct(string productName)
+            {
+                Product product = null;
+
+                foreach(var item in _goods)
+                {
+                    if (item.Name == productName)
+                        product = item;
+                }
+
+                return product;
+            }
+
+            public void ShowGoods()
+            {
+                foreach(var item in _goods)
+                {
+                    Console.WriteLine($"{item.Name} - {item.Price} - {item.Quantity}");
+                }
+            }
+        }
+
+        class Seller
+        {
+
         }
     }
 }
