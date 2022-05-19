@@ -10,6 +10,8 @@ namespace Store
             Shop shop = new Shop();
             Cart cart = new Cart(shop);
             Customer customer = new Customer(shop);
+            Seller seller = new Seller();
+            seller.OpenShop(shop, cart, customer);
         }
 
         class Shop
@@ -22,16 +24,15 @@ namespace Store
             private int _minQuantity = 5;
             private int _maxQuantity = 20;
 
-
             public Shop()
             {
                 Random random = new Random();
 
-                _goodsNames.Add(Goods.Water);
-                _goodsNames.Add(Goods.Apple);
-                _goodsNames.Add(Goods.Cheese);
-                _goodsNames.Add(Goods.Meat);
-                _goodsNames.Add(Goods.Bread);
+                _goodsNames.Add(Goods.Вода);
+                _goodsNames.Add(Goods.Яблоко);
+                _goodsNames.Add(Goods.Сыр);
+                _goodsNames.Add(Goods.Мясо);
+                _goodsNames.Add(Goods.Хлеб);
 
                 foreach (var productName in _goodsNames)
                 {
@@ -44,18 +45,6 @@ namespace Store
             public void GetCash(int cash)
             {
                 _cash += cash;
-            }
-
-            public void GiveProduct(Goods productName, int quantity)
-            {
-                Product product = GetProduct(productName);
-                product.ReduceQuantity(quantity);
-            }
-
-            public void TakeProduct(Goods productName, int quantity)
-            {
-                Product product = GetProduct(productName);
-                product.IncreaseQuantity(quantity);
             }
 
             public Product GetProduct(Goods productName)
@@ -71,29 +60,45 @@ namespace Store
                 return product;
             }
 
-            public void ShowGoods()
+            virtual public void ShowGoods()
             {
-                foreach (var item in _goods)
+                Console.Clear();
+                Console.WriteLine("Товары, доступные для покупки: \n");
+
+                foreach (var product in _goods)
                 {
-                    Console.WriteLine($"{item.Name} - {item.Price} - {item.Quantity}");
+                    Console.WriteLine($"{product.Name} - Цена: {product.Price} руб. - {product.Quantity} шт.");
                 }
+
+                Console.WriteLine();
             }
 
             public int GetPrice(Goods productName)
             {
                 int productPrice = 0;
-                foreach(var product in _goods)
+                foreach (var product in _goods)
                 {
-                    if(productName == product.Name)
+                    if (productName == product.Name)
                         productPrice = product.Price;
                 }
                 return productPrice;
+            }
+
+            public List<Product> GetAllProducts()
+            {
+                List<Product> products = new List<Product>();
+
+                foreach (var product in _goods)
+                {
+                    products.Add(product);
+                }
+
+                return products;
             }
         }
 
         class Cart : Shop
         {
-
             public Cart(Shop shop)
             {
                 _goods.Clear();
@@ -104,41 +109,56 @@ namespace Store
                 }
             }
 
-            new public void ShowGoods()
+            override public void ShowGoods()
             {
                 int sum = 0;
+                Console.Clear();
+                Console.WriteLine("Ваша корзина:\n");
 
                 foreach (var product in _goods)
                 {
                     sum += product.Price * product.Quantity;
-                    Console.WriteLine($"{product.Name} - {product.Price} - {product.Quantity}");
+                    Console.WriteLine($"{product.Name} - Цена: {product.Price} руб. - {product.Quantity} шт. на сумму {sum} руб.");
                 }
 
-                Console.WriteLine($"Сумма покупок: {sum}");
+                Console.WriteLine($"Итого сумма покупок: {sum}\n");
             }
         }
 
         class Customer : Shop
         {
-            private int minCash = 1000;
-            private int maxCash = 3000;
+            private int _minCash = 1000;
+            private int _maxCash = 3000;
 
             public Customer(Shop shop)
             {
                 Random randomCash = new Random();
                 _goods.Clear();
-                _cash = randomCash.Next(minCash, maxCash);
+                _cash = randomCash.Next(_minCash, _maxCash);
+
+                foreach (var productName in _goodsNames)
+                {
+                    _goods.Add(new Product(productName, shop.GetPrice(productName), 0));
+                }
             }
 
-            new public void ShowGoods()
+            override public void ShowGoods()
             {
+                Console.Clear();
+                Console.WriteLine("Ваши продукты:\n");
+
                 foreach (var product in _goods)
                 {
                     _cash -= product.Price * product.Quantity;
                     Console.WriteLine($"{product.Name} - {product.Quantity}");
                 }
 
-                Console.WriteLine($"Осталось денег: {_cash}");
+                Console.WriteLine($"Осталось денег: {_cash}\n");
+            }
+
+            public void GiveCash(int cash)
+            {
+                _cash -= cash;
             }
         }
 
@@ -175,6 +195,15 @@ namespace Store
                 while (isOpen)
                 {
                     string userInput;
+                    Console.WriteLine("Меню:" +
+                        "\n1. Каталог товаров." +
+                        "\n2. Состав корзины." +
+                        "\n3. Ваши приобретенные товары." +
+                        "\n4. Взять товар с полки." +
+                        "\n5. Вернуть товар на полку." +
+                        "\n6. Завершить покупку." +
+                        "\n7. Выход");
+
                     userInput = Console.ReadLine();
 
                     switch (userInput)
@@ -189,22 +218,187 @@ namespace Store
                             customer.ShowGoods();
                             break;
                         case "4":
+                            TakeProductToCart(shop, cart);
+                            break;
+                        case "5":
+                            ReturnProductToShop(shop, cart);
+                            break;
+                        case "6":
+                            BuyProducts(cart, customer);
+                            break;
+                        case "7":
+                            isOpen = false;
                             break;
                         default:
-                            Console.WriteLine("Такой команды не существует.");
+                            ShowDefaultMessage();
                             break;
                     }
                 }
+            }
+
+            private void TakeProductToCart(Shop shop, Cart cart)
+            {
+                bool isChoosing = true;
+
+                while (isChoosing)
+                {
+                    string userInput;
+                    Console.WriteLine("Выберите товар:" +
+                        "\n1. Яблоко." +
+                        "\n2. Вода." +
+                        "\n3. Мясо." +
+                        "\n4. Сыр." +
+                        "\n5. Хлеб." +
+                        "\n6. Вернуться в меню.");
+
+                    userInput = Console.ReadLine();
+
+                    switch (userInput)
+                    {
+                        case "1":
+                            TakeProductQuantity(Goods.Яблоко, shop, cart);
+                            break;
+                        case "2":
+                            TakeProductQuantity(Goods.Вода, shop, cart);
+                            break;
+                        case "3":
+                            TakeProductQuantity(Goods.Мясо, shop, cart);
+                            break;
+                        case "4":
+                            TakeProductQuantity(Goods.Сыр, shop, cart);
+                            break;
+                        case "5":
+                            TakeProductQuantity(Goods.Хлеб, shop, cart);
+                            break;
+                        case "6":
+                            isChoosing = false;
+                            break;
+                        default:
+                            ShowDefaultMessage();
+                            break;
+                    }
+                }
+            }
+
+            private void ReturnProductToShop(Shop shop, Cart cart)
+            {
+                bool isChoosing = true;
+
+                while (isChoosing)
+                {
+                    string userInput;
+                    Console.WriteLine("Выберите товар:" +
+                        "\n1. Яблоко." +
+                        "\n2. Вода." +
+                        "\n3. Мясо." +
+                        "\n4. Сыр." +
+                        "\n5. Хлеб." +
+                        "\n6. Вернуться в меню.");
+
+                    userInput = Console.ReadLine();
+
+                    switch (userInput)
+                    {
+                        case "1":
+                            ReturnProductQuantity(Goods.Яблоко, shop, cart);
+                            break;
+                        case "2":
+                            ReturnProductQuantity(Goods.Вода, shop, cart);
+                            break;
+                        case "3":
+                            ReturnProductQuantity(Goods.Мясо, shop, cart);
+                            break;
+                        case "4":
+                            ReturnProductQuantity(Goods.Сыр, shop, cart);
+                            break;
+                        case "5":
+                            ReturnProductQuantity(Goods.Хлеб, shop, cart);
+                            break;
+                        case "6":
+                            isChoosing = false;
+                            break;
+                        default:
+                            ShowDefaultMessage();
+                            break;
+                    }
+                }
+            }
+
+            private void TakeProductQuantity(Goods productName, Shop shop, Cart cart)
+            {
+                Console.Write("Сколько хотите взять?\n");
+                string userInput = Console.ReadLine();
+                int quantity = GetCorrectNumber(userInput, shop, productName);
+                shop.GetProduct(productName).ReduceQuantity(quantity);
+                cart.GetProduct(productName).IncreaseQuantity(quantity);
+            }
+
+            private void ReturnProductQuantity(Goods product, Shop shop, Cart cart)
+            {
+                Console.Write("Сколько хотите вернуть?\n");
+                string userInput = Console.ReadLine();
+                int quantity = GetCorrectNumber(userInput, cart, product);
+                shop.GetProduct(product).IncreaseQuantity(quantity);
+                cart.GetProduct(product).ReduceQuantity(quantity);
+            }
+
+            private int GetCorrectNumber(string numberString, Shop shop, Goods product)
+            {
+                int quantity = shop.GetProduct(product).Quantity;
+
+                if (int.TryParse(numberString, out int number))
+                {
+                    if (number > 0 && number <= quantity)
+                    {
+                        return number;
+                    }
+                }
+
+                Console.WriteLine("Ошибка! Введите корректное число.");
+                return 0;
+            }
+
+            private int GetCorrectNumber(string numberString, Cart cart, Goods product)
+            {
+                int quantity = cart.GetProduct(product).Quantity;
+
+                if (int.TryParse(numberString, out int number))
+                {
+                    if (number > 0 && number <= quantity)
+                    {
+                        return number;
+                    }
+                }
+
+                Console.WriteLine("Ошибка! Введите число больше нуля.");
+                return 0;
+            }
+
+            private void BuyProducts(Cart cart, Customer customer)
+            {
+                foreach (var product in customer.GetAllProducts())
+                {
+                    int sum = product.Price * product.Quantity;
+                    customer.GetProduct(product.Name).IncreaseQuantity(cart.GetProduct(product.Name).Quantity);
+                    cart.GetProduct(product.Name).ReduceQuantity(cart.GetProduct(product.Name).Quantity);
+                    customer.GiveCash(sum);
+                }
+            }
+
+            private void ShowDefaultMessage()
+            {
+                Console.Clear();
+                Console.WriteLine("Такой команды не существует.");
             }
         }
     }
 
     enum Goods
     {
-        Apple,
-        Water,
-        Bread,
-        Meat,
-        Cheese
+        Яблоко,
+        Вода,
+        Хлеб,
+        Мясо,
+        Сыр
     }
 }
