@@ -9,9 +9,7 @@ namespace Store
         {
             Shop shop = new Shop();
             Cart cart = new Cart(shop);
-            shop.ShowGoods();
-            Console.WriteLine();
-            cart.ShowGoods();
+            Customer customer = new Customer(shop);
         }
 
         class Shop
@@ -170,7 +168,34 @@ namespace Store
 
         class Seller
         {
+            public void OpenShop(Shop shop, Cart cart, Customer customer)
+            {
+                bool isOpen = true;
 
+                while (isOpen)
+                {
+                    string userInput;
+                    userInput = Console.ReadLine();
+
+                    switch (userInput)
+                    {
+                        case "1":
+                            shop.ShowGoods();
+                            break;
+                        case "2":
+                            cart.ShowGoods();
+                            break;
+                        case "3":
+                            customer.ShowGoods();
+                            break;
+                        case "4":
+                            break;
+                        default:
+                            Console.WriteLine("Такой команды не существует.");
+                            break;
+                    }
+                }
+            }
         }
     }
 
