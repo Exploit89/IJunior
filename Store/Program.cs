@@ -8,14 +8,17 @@ namespace Store
         static void Main(string[] args)
         {
             Shop shop = new Shop();
-            Cart cart = new Cart();
+            Cart cart = new Cart(shop);
+            shop.ShowGoods();
+            Console.WriteLine();
+            cart.ShowGoods();
         }
 
         class Shop
         {
-            private List<Goods> _goodsNames = new List<Goods>();
-            private List<Product> _goods = new List<Product>();
-            private float _cash;
+            private protected List<Goods> _goodsNames = new List<Goods>();
+            private protected List<Product> _goods = new List<Product>();
+            private protected float _cash;
             private int _minPrice = 10;
             private int _maxPrice = 100;
             private int _minQuantity = 5;
@@ -77,25 +80,29 @@ namespace Store
                     Console.WriteLine($"{item.Name} - {item.Price} - {item.Quantity}");
                 }
             }
+
+            public int GetPrice(Goods productName)
+            {
+                int productPrice = 0;
+                foreach(var product in _goods)
+                {
+                    if(productName == product.Name)
+                        productPrice = product.Price;
+                }
+                return productPrice;
+            }
         }
 
         class Cart : Shop
         {
-            private List<Product> _goods = new List<Product>();
 
-            public Cart()
+            public Cart(Shop shop)
             {
-                Random random = new Random();
-
-                _goodsNames.Add(Goods.Water);
-                _goodsNames.Add(Goods.Apple);
-                _goodsNames.Add(Goods.Cheese);
-                _goodsNames.Add(Goods.Meat);
-                _goodsNames.Add(Goods.Bread);
+                _goods.Clear();
 
                 foreach (var productName in _goodsNames)
                 {
-                    _goods.Add(new Product(productName, randomPrice, randomQuantity));
+                    _goods.Add(new Product(productName, shop.GetPrice(productName), 0));
                 }
             }
 
@@ -103,19 +110,38 @@ namespace Store
             {
                 int sum = 0;
 
-                foreach (var item in _goods)
+                foreach (var product in _goods)
                 {
-                    sum += item.Price * item.Quantity;
-                    Console.WriteLine($"{item.Name} - {item.Price} - {item.Quantity}");
+                    sum += product.Price * product.Quantity;
+                    Console.WriteLine($"{product.Name} - {product.Price} - {product.Quantity}");
                 }
 
                 Console.WriteLine($"Сумма покупок: {sum}");
             }
         }
 
-        class Customer
+        class Customer : Shop
         {
+            private int minCash = 1000;
+            private int maxCash = 3000;
 
+            public Customer(Shop shop)
+            {
+                Random randomCash = new Random();
+                _goods.Clear();
+                _cash = randomCash.Next(minCash, maxCash);
+            }
+
+            new public void ShowGoods()
+            {
+                foreach (var product in _goods)
+                {
+                    _cash -= product.Price * product.Quantity;
+                    Console.WriteLine($"{product.Name} - {product.Quantity}");
+                }
+
+                Console.WriteLine($"Осталось денег: {_cash}");
+            }
         }
 
         class Product
