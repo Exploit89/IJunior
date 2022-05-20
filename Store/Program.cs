@@ -17,7 +17,7 @@ namespace Store
         class Shop
         {
             private protected List<Goods> _goodsNames = new List<Goods>();
-            private protected List<Product> _goods = new List<Product>();
+            private protected List<Stack> _goods = new List<Stack>();
             private protected float _cash;
             private int _minPrice = 10;
             private int _maxPrice = 100;
@@ -38,7 +38,8 @@ namespace Store
                 {
                     int randomPrice = random.Next(_minPrice, _maxPrice);
                     int randomQuantity = random.Next(_minQuantity, _maxQuantity);
-                    _goods.Add(new Product(productName, randomPrice, randomQuantity));
+                    Product product = new Product(productName, randomPrice);
+                    _goods.Add(new Stack(product, randomQuantity));
                 }
             }
 
@@ -47,14 +48,14 @@ namespace Store
                 _cash += cash;
             }
 
-            public Product GetProduct(Goods productName)
+            public Stack GetStack(Goods productName)
             {
-                Product product = null;
+                Stack product = null;
 
-                foreach (var item in _goods)
+                foreach (var stack in _goods)
                 {
-                    if (item.Name == productName)
-                        product = item;
+                    if (stack.GetName() == productName)
+                        product = stack;
                 }
 
                 return product;
@@ -65,9 +66,9 @@ namespace Store
                 Console.Clear();
                 Console.WriteLine("Товары, доступные для покупки: \n");
 
-                foreach (var product in _goods)
+                foreach (var stack in _goods)
                 {
-                    Console.WriteLine($"{product.Name} - Цена: {product.Price} руб. - {product.Quantity} шт.");
+                    Console.WriteLine($"{stack.GetName()} - Цена: {stack.GetProduct().Price} руб. - {stack.Quantity} шт.");
                 }
 
                 Console.WriteLine();
@@ -76,21 +77,21 @@ namespace Store
             public int GetPrice(Goods productName)
             {
                 int productPrice = 0;
-                foreach (var product in _goods)
+                foreach (var stack in _goods)
                 {
-                    if (productName == product.Name)
-                        productPrice = product.Price;
+                    if (productName == stack.GetName())
+                        productPrice = stack.GetProduct().Price;
                 }
                 return productPrice;
             }
 
-            public List<Product> GetAllProducts()
+            public List<Stack> GetAllStacks()
             {
-                List<Product> products = new List<Product>();
+                List<Stack> products = new List<Stack>();
 
-                foreach (var product in _goods)
+                foreach (var stack in _goods)
                 {
-                    products.Add(product);
+                    products.Add(stack);
                 }
 
                 return products;
@@ -105,7 +106,8 @@ namespace Store
 
                 foreach (var productName in _goodsNames)
                 {
-                    _goods.Add(new Product(productName, shop.GetPrice(productName), 0));
+                    Product product = new Product(productName, shop.GetPrice(productName));
+                    _goods.Add(new Stack(product, 0));
                 }
             }
 
@@ -115,10 +117,12 @@ namespace Store
                 Console.Clear();
                 Console.WriteLine("Ваша корзина:\n");
 
-                foreach (var product in _goods)
+                foreach (var stack in _goods)
                 {
-                    sum += product.Price * product.Quantity;
-                    Console.WriteLine($"{product.Name} - Цена: {product.Price} руб. - {product.Quantity} шт. на сумму {sum} руб.");
+                    int sumEach = 0;
+                    sumEach = stack.GetProduct().Price * stack.Quantity;
+                    sum += stack.GetProduct().Price * stack.Quantity;
+                    Console.WriteLine($"{stack.GetProduct().Name} - Цена: {stack.GetProduct().Price} руб. - {stack.Quantity} шт. на сумму {sum} руб.");
                 }
 
                 Console.WriteLine($"Итого сумма покупок: {sum}\n");
@@ -138,7 +142,8 @@ namespace Store
 
                 foreach (var productName in _goodsNames)
                 {
-                    _goods.Add(new Product(productName, shop.GetPrice(productName), 0));
+                    Product product = new Product(productName, shop.GetPrice(productName));
+                    _goods.Add(new Stack(product, 0));
                 }
             }
 
@@ -147,10 +152,10 @@ namespace Store
                 Console.Clear();
                 Console.WriteLine("Ваши продукты:\n");
 
-                foreach (var product in _goods)
+                foreach (var stack in _goods)
                 {
-                    _cash -= product.Price * product.Quantity;
-                    Console.WriteLine($"{product.Name} - {product.Quantity}");
+                    _cash -= stack.GetProduct().Price * stack.Quantity;
+                    Console.WriteLine($"{stack.GetProduct().Name} - {stack.Quantity}");
                 }
 
                 Console.WriteLine($"Осталось денег: {_cash}\n");
@@ -166,23 +171,11 @@ namespace Store
         {
             public Goods Name { get; private set; }
             public int Price { get; private set; }
-            public int Quantity { get; private set; }
 
-            public Product(Goods name, int price, int quantity = 0)
+            public Product(Goods name, int price)
             {
                 Name = name;
                 Price = price;
-                Quantity = quantity;
-            }
-
-            public void ReduceQuantity(int quantity)
-            {
-                Quantity -= quantity;
-            }
-
-            public void IncreaseQuantity(int quantity)
-            {
-                Quantity += quantity;
             }
         }
 
@@ -224,7 +217,7 @@ namespace Store
                             ReturnProductToShop(shop, cart);
                             break;
                         case "6":
-                            BuyProducts(cart, customer);
+                            BuyProducts(cart, customer, shop);
                             break;
                         case "7":
                             isOpen = false;
@@ -329,8 +322,9 @@ namespace Store
                 Console.Write("Сколько хотите взять?\n");
                 string userInput = Console.ReadLine();
                 int quantity = GetCorrectNumber(userInput, shop, productName);
-                shop.GetProduct(productName).ReduceQuantity(quantity);
-                cart.GetProduct(productName).IncreaseQuantity(quantity);
+                shop.GetStack(productName).ReduceQuantity(quantity);
+                cart.GetStack(productName).IncreaseQuantity(quantity);
+                Console.Clear();
             }
 
             private void ReturnProductQuantity(Goods product, Shop shop, Cart cart)
@@ -338,13 +332,13 @@ namespace Store
                 Console.Write("Сколько хотите вернуть?\n");
                 string userInput = Console.ReadLine();
                 int quantity = GetCorrectNumber(userInput, cart, product);
-                shop.GetProduct(product).IncreaseQuantity(quantity);
-                cart.GetProduct(product).ReduceQuantity(quantity);
+                shop.GetStack(product).IncreaseQuantity(quantity);
+                cart.GetStack(product).ReduceQuantity(quantity);
             }
 
             private int GetCorrectNumber(string numberString, Shop shop, Goods product)
             {
-                int quantity = shop.GetProduct(product).Quantity;
+                int quantity = shop.GetStack(product).Quantity;
 
                 if (int.TryParse(numberString, out int number))
                 {
@@ -360,7 +354,7 @@ namespace Store
 
             private int GetCorrectNumber(string numberString, Cart cart, Goods product)
             {
-                int quantity = cart.GetProduct(product).Quantity;
+                int quantity = cart.GetStack(product).Quantity;
 
                 if (int.TryParse(numberString, out int number))
                 {
@@ -374,21 +368,58 @@ namespace Store
                 return 0;
             }
 
-            private void BuyProducts(Cart cart, Customer customer)
+            private void BuyProducts(Cart cart, Customer customer, Shop shop)
             {
-                foreach (var product in customer.GetAllProducts())
+                foreach (var stack in customer.GetAllStacks())
                 {
-                    int sum = product.Price * product.Quantity;
-                    customer.GetProduct(product.Name).IncreaseQuantity(cart.GetProduct(product.Name).Quantity);
-                    cart.GetProduct(product.Name).ReduceQuantity(cart.GetProduct(product.Name).Quantity);
+                    int sum = stack.GetProduct().Price * stack.Quantity;
+                    customer.GetStack(stack.GetName()).IncreaseQuantity(cart.GetStack(stack.GetName()).Quantity);
+                    cart.GetStack(stack.GetName()).ReduceQuantity(stack.Quantity);
                     customer.GiveCash(sum);
+                    shop.GetCash(sum);
                 }
+
+                Console.Clear();
+                Console.WriteLine($"Успешно совершена покупка!\n");
             }
 
             private void ShowDefaultMessage()
             {
                 Console.Clear();
                 Console.WriteLine("Такой команды не существует.");
+            }
+        }
+
+        class Stack
+        {
+            private Product _product;
+
+            public int Quantity { get; private set; }
+
+            public Stack(Product product, int quantity)
+            {
+                _product = product;
+                Quantity = quantity;
+            }
+
+            public void IncreaseQuantity(int quantity)
+            {
+                Quantity += quantity;
+            }
+
+            public void ReduceQuantity(int quantity)
+            {
+                Quantity -= quantity;
+            }
+
+            public Goods GetName()
+            {
+                return _product.Name;
+            }
+
+            public Product GetProduct()
+            {
+                return _product;
             }
         }
     }
