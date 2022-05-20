@@ -16,9 +16,9 @@ namespace MyFirstApp
 
         class Shop
         {
-            private protected List<Goods> _goodsNames = new List<Goods>();
-            private protected List<Stack> _goods = new List<Stack>();
-            private protected float _cash;
+            private List<Goods> _goodsNames = new List<Goods>();
+            private List<Stack> _goods = new List<Stack>();
+            private float _cash;
             private int _minPrice = 10;
             private int _maxPrice = 100;
             private int _minQuantity = 5;
@@ -84,25 +84,20 @@ namespace MyFirstApp
                 }
                 return productPrice;
             }
-
-            public List<Stack> GetAllStacks()
-            {
-                List<Stack> products = new List<Stack>();
-
-                foreach (var stack in _goods)
-                {
-                    products.Add(stack);
-                }
-
-                return products;
-            }
         }
 
-        class Cart : Shop
+        class Cart
         {
+            private List<Goods> _goodsNames = new List<Goods>();
+            private List<Stack> _goods = new List<Stack>();
+
             public Cart(Shop shop)
             {
-                _goods.Clear();
+                _goodsNames.Add(Goods.Вода);
+                _goodsNames.Add(Goods.Яблоко);
+                _goodsNames.Add(Goods.Сыр);
+                _goodsNames.Add(Goods.Мясо);
+                _goodsNames.Add(Goods.Хлеб);
 
                 foreach (var productName in _goodsNames)
                 {
@@ -111,7 +106,7 @@ namespace MyFirstApp
                 }
             }
 
-            override public void ShowGoods()
+            public void ShowGoods()
             {
                 int sum = 0;
                 Console.Clear();
@@ -127,18 +122,40 @@ namespace MyFirstApp
 
                 Console.WriteLine($"Итого сумма покупок: {sum}\n");
             }
+
+            public Stack GetStack(Goods productName)
+            {
+                Stack product = null;
+
+                foreach (var stack in _goods)
+                {
+                    if (stack.GetName() == productName)
+                        product = stack;
+                }
+
+                return product;
+            }
         }
 
-        class Customer : Shop
+        class Customer
         {
+            private List<Goods> _goodsNames = new List<Goods>();
+            private List<Stack> _goods = new List<Stack>();
             private int _minCash = 1000;
             private int _maxCash = 3000;
 
+            public float Cash { get; private set; }
+
             public Customer(Shop shop)
             {
+                _goodsNames.Add(Goods.Вода);
+                _goodsNames.Add(Goods.Яблоко);
+                _goodsNames.Add(Goods.Сыр);
+                _goodsNames.Add(Goods.Мясо);
+                _goodsNames.Add(Goods.Хлеб);
+
                 Random randomCash = new Random();
-                _goods.Clear();
-                _cash = randomCash.Next(_minCash, _maxCash);
+                Cash = randomCash.Next(_minCash, _maxCash);
 
                 foreach (var productName in _goodsNames)
                 {
@@ -147,23 +164,47 @@ namespace MyFirstApp
                 }
             }
 
-            override public void ShowGoods()
+            public void ShowGoods()
             {
                 Console.Clear();
                 Console.WriteLine("Ваши продукты:\n");
 
                 foreach (var stack in _goods)
                 {
-                    _cash -= stack.GetProduct().Price * stack.Quantity;
                     Console.WriteLine($"{stack.GetProduct().Name} - {stack.Quantity}");
                 }
 
-                Console.WriteLine($"Осталось денег: {_cash}\n");
+                Console.WriteLine($"Осталось денег: {Cash}\n");
             }
 
             public void GiveCash(int cash)
             {
-                _cash -= cash;
+                Cash -= cash;
+            }
+
+            public Stack GetStack(Goods productName)
+            {
+                Stack product = null;
+
+                foreach (var stack in _goods)
+                {
+                    if (stack.GetName() == productName)
+                        product = stack;
+                }
+
+                return product;
+            }
+
+            public List<Stack> GetAllStacks()
+            {
+                List<Stack> products = new List<Stack>();
+
+                foreach (var stack in _goods)
+                {
+                    products.Add(stack);
+                }
+
+                return products;
             }
         }
 
@@ -372,9 +413,9 @@ namespace MyFirstApp
             {
                 foreach (var stack in customer.GetAllStacks())
                 {
-                    int sum = stack.GetProduct().Price * stack.Quantity;
+                    int sum = stack.GetProduct().Price * cart.GetStack(stack.GetName()).Quantity;
                     customer.GetStack(stack.GetName()).IncreaseQuantity(cart.GetStack(stack.GetName()).Quantity);
-                    cart.GetStack(stack.GetName()).ReduceQuantity(stack.Quantity);
+                    cart.GetStack(stack.GetName()).ReduceQuantity(cart.GetStack(stack.GetName()).Quantity);
                     customer.GiveCash(sum);
                     shop.GetCash(sum);
                 }
