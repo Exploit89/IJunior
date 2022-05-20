@@ -7,470 +7,284 @@ namespace MyFirstApp
     {
         static void Main(string[] args)
         {
-            Shop shop = new Shop();
-            Cart cart = new Cart(shop);
-            Customer customer = new Customer(shop);
             Seller seller = new Seller();
-            seller.OpenShop(shop, cart, customer);
+            Player player = new Player();
+            seller.OpenShop(player);
         }
+    }
 
-        class Shop
+    class Seller
+    {
+        private List<Stack> _products = new List<Stack>();
+
+        public Seller()
         {
-            private List<Goods> _goodsNames = new List<Goods>();
-            private List<Stack> _goods = new List<Stack>();
-            private float _cash;
-            private int _minPrice = 10;
-            private int _maxPrice = 100;
-            private int _minQuantity = 5;
-            private int _maxQuantity = 20;
+            Random random = new Random();
+            int minPrice = 10;
+            int maxPrice = 100;
+            int minQuantity = 1;
+            int maxQuantity = 10;
 
-            public Shop()
+            foreach (Products productName in Enum.GetValues(typeof(Products)))
             {
-                Random random = new Random();
-
-                _goodsNames.Add(Goods.Вода);
-                _goodsNames.Add(Goods.Яблоко);
-                _goodsNames.Add(Goods.Сыр);
-                _goodsNames.Add(Goods.Мясо);
-                _goodsNames.Add(Goods.Хлеб);
-
-                foreach (var productName in _goodsNames)
-                {
-                    int randomPrice = random.Next(_minPrice, _maxPrice);
-                    int randomQuantity = random.Next(_minQuantity, _maxQuantity);
-                    Product product = new Product(productName, randomPrice);
-                    _goods.Add(new Stack(product, randomQuantity));
-                }
-            }
-
-            public void GetCash(int cash)
-            {
-                _cash += cash;
-            }
-
-            public Stack GetStack(Goods productName)
-            {
-                Stack product = null;
-
-                foreach (var stack in _goods)
-                {
-                    if (stack.GetName() == productName)
-                        product = stack;
-                }
-
-                return product;
-            }
-
-            virtual public void ShowGoods()
-            {
-                Console.Clear();
-                Console.WriteLine("Товары, доступные для покупки: \n");
-
-                foreach (var stack in _goods)
-                {
-                    Console.WriteLine($"{stack.GetName()} - Цена: {stack.GetProduct().Price} руб. - {stack.Quantity} шт.");
-                }
-
-                Console.WriteLine();
-            }
-
-            public int GetPrice(Goods productName)
-            {
-                int productPrice = 0;
-                foreach (var stack in _goods)
-                {
-                    if (productName == stack.GetName())
-                        productPrice = stack.GetProduct().Price;
-                }
-                return productPrice;
+                int newPrice = random.Next(minPrice, maxPrice);
+                int newQuantity = random.Next(minQuantity, maxQuantity);
+                _products.Add(new Stack(new Product(productName, newPrice), newQuantity));
             }
         }
 
-        class Cart
+        public void OpenShop(Player player)
         {
-            private List<Goods> _goodsNames = new List<Goods>();
-            private List<Stack> _goods = new List<Stack>();
+            bool isOpen = true;
 
-            public Cart(Shop shop)
+            while (isOpen)
             {
-                _goodsNames.Add(Goods.Вода);
-                _goodsNames.Add(Goods.Яблоко);
-                _goodsNames.Add(Goods.Сыр);
-                _goodsNames.Add(Goods.Мясо);
-                _goodsNames.Add(Goods.Хлеб);
+                Console.WriteLine("Меню:" +
+                    "\n1. - Посмотреть товар." +
+                    "\n2. - Купить товар." +
+                    "\n3. - Показать купленные товары." +
+                    "\n4. - Выход.");
 
-                foreach (var productName in _goodsNames)
-                {
-                    Product product = new Product(productName, shop.GetPrice(productName));
-                    _goods.Add(new Stack(product, 0));
-                }
-            }
-
-            public void ShowGoods()
-            {
-                int sum = 0;
-                Console.Clear();
-                Console.WriteLine("Ваша корзина:\n");
-
-                foreach (var stack in _goods)
-                {
-                    int sumEach = 0;
-                    sumEach = stack.GetProduct().Price * stack.Quantity;
-                    sum += stack.GetProduct().Price * stack.Quantity;
-                    Console.WriteLine($"{stack.GetProduct().Name} - Цена: {stack.GetProduct().Price} руб. - {stack.Quantity} шт. на сумму {sum} руб.");
-                }
-
-                Console.WriteLine($"Итого сумма покупок: {sum}\n");
-            }
-
-            public Stack GetStack(Goods productName)
-            {
-                Stack product = null;
-
-                foreach (var stack in _goods)
-                {
-                    if (stack.GetName() == productName)
-                        product = stack;
-                }
-
-                return product;
-            }
-        }
-
-        class Customer
-        {
-            private List<Goods> _goodsNames = new List<Goods>();
-            private List<Stack> _goods = new List<Stack>();
-            private int _minCash = 1000;
-            private int _maxCash = 3000;
-
-            public float Cash { get; private set; }
-
-            public Customer(Shop shop)
-            {
-                _goodsNames.Add(Goods.Вода);
-                _goodsNames.Add(Goods.Яблоко);
-                _goodsNames.Add(Goods.Сыр);
-                _goodsNames.Add(Goods.Мясо);
-                _goodsNames.Add(Goods.Хлеб);
-
-                Random randomCash = new Random();
-                Cash = randomCash.Next(_minCash, _maxCash);
-
-                foreach (var productName in _goodsNames)
-                {
-                    Product product = new Product(productName, shop.GetPrice(productName));
-                    _goods.Add(new Stack(product, 0));
-                }
-            }
-
-            public void ShowGoods()
-            {
-                Console.Clear();
-                Console.WriteLine("Ваши продукты:\n");
-
-                foreach (var stack in _goods)
-                {
-                    Console.WriteLine($"{stack.GetProduct().Name} - {stack.Quantity}");
-                }
-
-                Console.WriteLine($"Осталось денег: {Cash}\n");
-            }
-
-            public void GiveCash(int cash)
-            {
-                Cash -= cash;
-            }
-
-            public Stack GetStack(Goods productName)
-            {
-                Stack product = null;
-
-                foreach (var stack in _goods)
-                {
-                    if (stack.GetName() == productName)
-                        product = stack;
-                }
-
-                return product;
-            }
-
-            public List<Stack> GetAllStacks()
-            {
-                List<Stack> products = new List<Stack>();
-
-                foreach (var stack in _goods)
-                {
-                    products.Add(stack);
-                }
-
-                return products;
-            }
-        }
-
-        class Product
-        {
-            public Goods Name { get; private set; }
-            public int Price { get; private set; }
-
-            public Product(Goods name, int price)
-            {
-                Name = name;
-                Price = price;
-            }
-        }
-
-        class Seller
-        {
-            public void OpenShop(Shop shop, Cart cart, Customer customer)
-            {
-                bool isOpen = true;
-
-                while (isOpen)
-                {
-                    string userInput;
-                    Console.WriteLine("Меню:" +
-                        "\n1. Каталог товаров." +
-                        "\n2. Состав корзины." +
-                        "\n3. Ваши приобретенные товары." +
-                        "\n4. Взять товар с полки." +
-                        "\n5. Вернуть товар на полку." +
-                        "\n6. Завершить покупку." +
-                        "\n7. Выход");
-
-                    userInput = Console.ReadLine();
-
-                    switch (userInput)
-                    {
-                        case "1":
-                            shop.ShowGoods();
-                            break;
-                        case "2":
-                            cart.ShowGoods();
-                            break;
-                        case "3":
-                            customer.ShowGoods();
-                            break;
-                        case "4":
-                            TakeProductToCart(shop, cart);
-                            break;
-                        case "5":
-                            ReturnProductToShop(shop, cart);
-                            break;
-                        case "6":
-                            BuyProducts(cart, customer, shop);
-                            break;
-                        case "7":
-                            isOpen = false;
-                            break;
-                        default:
-                            ShowDefaultMessage();
-                            break;
-                    }
-                }
-            }
-
-            private void TakeProductToCart(Shop shop, Cart cart)
-            {
-                bool isChoosing = true;
-
-                while (isChoosing)
-                {
-                    string userInput;
-                    Console.WriteLine("Выберите товар:" +
-                        "\n1. Яблоко." +
-                        "\n2. Вода." +
-                        "\n3. Мясо." +
-                        "\n4. Сыр." +
-                        "\n5. Хлеб." +
-                        "\n6. Вернуться в меню.");
-
-                    userInput = Console.ReadLine();
-
-                    switch (userInput)
-                    {
-                        case "1":
-                            TakeProductQuantity(Goods.Яблоко, shop, cart);
-                            break;
-                        case "2":
-                            TakeProductQuantity(Goods.Вода, shop, cart);
-                            break;
-                        case "3":
-                            TakeProductQuantity(Goods.Мясо, shop, cart);
-                            break;
-                        case "4":
-                            TakeProductQuantity(Goods.Сыр, shop, cart);
-                            break;
-                        case "5":
-                            TakeProductQuantity(Goods.Хлеб, shop, cart);
-                            break;
-                        case "6":
-                            isChoosing = false;
-                            break;
-                        default:
-                            ShowDefaultMessage();
-                            break;
-                    }
-                }
-            }
-
-            private void ReturnProductToShop(Shop shop, Cart cart)
-            {
-                bool isChoosing = true;
-
-                while (isChoosing)
-                {
-                    string userInput;
-                    Console.WriteLine("Выберите товар:" +
-                        "\n1. Яблоко." +
-                        "\n2. Вода." +
-                        "\n3. Мясо." +
-                        "\n4. Сыр." +
-                        "\n5. Хлеб." +
-                        "\n6. Вернуться в меню.");
-
-                    userInput = Console.ReadLine();
-
-                    switch (userInput)
-                    {
-                        case "1":
-                            ReturnProductQuantity(Goods.Яблоко, shop, cart);
-                            break;
-                        case "2":
-                            ReturnProductQuantity(Goods.Вода, shop, cart);
-                            break;
-                        case "3":
-                            ReturnProductQuantity(Goods.Мясо, shop, cart);
-                            break;
-                        case "4":
-                            ReturnProductQuantity(Goods.Сыр, shop, cart);
-                            break;
-                        case "5":
-                            ReturnProductQuantity(Goods.Хлеб, shop, cart);
-                            break;
-                        case "6":
-                            isChoosing = false;
-                            break;
-                        default:
-                            ShowDefaultMessage();
-                            break;
-                    }
-                }
-            }
-
-            private void TakeProductQuantity(Goods productName, Shop shop, Cart cart)
-            {
-                Console.Write("Сколько хотите взять?\n");
                 string userInput = Console.ReadLine();
-                int quantity = GetCorrectNumber(userInput, shop, productName);
-                shop.GetStack(productName).ReduceQuantity(quantity);
-                cart.GetStack(productName).IncreaseQuantity(quantity);
-                Console.Clear();
-            }
 
-            private void ReturnProductQuantity(Goods product, Shop shop, Cart cart)
-            {
-                Console.Write("Сколько хотите вернуть?\n");
-                string userInput = Console.ReadLine();
-                int quantity = GetCorrectNumber(userInput, cart, product);
-                shop.GetStack(product).IncreaseQuantity(quantity);
-                cart.GetStack(product).ReduceQuantity(quantity);
-            }
-
-            private int GetCorrectNumber(string numberString, Shop shop, Goods product)
-            {
-                int quantity = shop.GetStack(product).Quantity;
-
-                if (int.TryParse(numberString, out int number))
+                switch (userInput)
                 {
-                    if (number > 0 && number <= quantity)
-                    {
-                        return number;
-                    }
+                    case "1":
+                        ShowProducts();
+                        break;
+                    case "2":
+                        BuyProduct(player);
+                        break;
+                    case "3":
+                        player.ShowProducts();
+                        break;
+                    case "4":
+                        isOpen = false;
+                        break;
+                    default:
+                        ShowDefaultMessage();
+                        break;
                 }
-
-                Console.WriteLine("Ошибка! Введите корректное число.");
-                return 0;
-            }
-
-            private int GetCorrectNumber(string numberString, Cart cart, Goods product)
-            {
-                int quantity = cart.GetStack(product).Quantity;
-
-                if (int.TryParse(numberString, out int number))
-                {
-                    if (number > 0 && number <= quantity)
-                    {
-                        return number;
-                    }
-                }
-
-                Console.WriteLine("Ошибка! Введите число больше нуля.");
-                return 0;
-            }
-
-            private void BuyProducts(Cart cart, Customer customer, Shop shop)
-            {
-                foreach (var stack in customer.GetAllStacks())
-                {
-                    int sum = stack.GetProduct().Price * cart.GetStack(stack.GetName()).Quantity;
-                    customer.GetStack(stack.GetName()).IncreaseQuantity(cart.GetStack(stack.GetName()).Quantity);
-                    cart.GetStack(stack.GetName()).ReduceQuantity(cart.GetStack(stack.GetName()).Quantity);
-                    customer.GiveCash(sum);
-                    shop.GetCash(sum);
-                }
-
-                Console.Clear();
-                Console.WriteLine($"Успешно совершена покупка!\n");
-            }
-
-            private void ShowDefaultMessage()
-            {
-                Console.Clear();
-                Console.WriteLine("Такой команды не существует.");
             }
         }
 
-        class Stack
+        private void ShowProducts()
         {
-            private Product _product;
+            Console.Clear();
 
-            public int Quantity { get; private set; }
-
-            public Stack(Product product, int quantity)
+            foreach (Stack stack in _products)
             {
-                _product = product;
-                Quantity = quantity;
+                Console.WriteLine($"{stack.Product.Name} - {stack.Product.Price} руб. - {stack.Quantity} шт.");
             }
 
-            public void IncreaseQuantity(int quantity)
+            Console.WriteLine();
+        }
+
+        private void BuyProduct(Player player)
+        {
+            Products userChosenName = ChooseProduct();
+            if (userChosenName == 0)
             {
-                Quantity += quantity;
+                Console.WriteLine("Такого товара нет.");
+            }
+            else
+            {
+                int userQuantity = ChooseQuantity(userChosenName);
+
+                if (userQuantity == 0)
+                {
+                    Console.WriteLine("Попробуйте снова.\n");
+                }
+                else
+                {
+                    foreach (Stack stack in _products)
+                    {
+                        if (userChosenName == stack.Product.Name)
+                        {
+                            int sum = stack.Product.Price * userQuantity;
+                            player.TakeProduct(stack, userQuantity);
+                            player.Wallet.DecreaseCash(sum);
+                            GiveProduct(stack, userQuantity);
+                        }
+                    }
+
+                    Console.Clear();
+                    Console.WriteLine("Товар успешно куплен.\n");
+                }
+            }
+        }
+
+        private Products ChooseProduct()
+        {
+            Products[] productNames = (Products[])Enum.GetValues(typeof(Products));
+            Console.WriteLine("Выберите товар:\n");
+
+            for (int i = 0; i < productNames.Length; i++)
+            {
+                Console.WriteLine($"{i + 1}. {productNames[i]}");
             }
 
-            public void ReduceQuantity(int quantity)
+            Console.WriteLine();
+            string userInput = Console.ReadLine();
+            int userNumber = GetCorrectNumber(userInput);
+
+
+            Products userChosenName = 0;
+
+            for (int i = 0; i < productNames.Length; i++)
             {
-                Quantity -= quantity;
+                if (i + 1 == userNumber && userNumber <= productNames.Length)
+                    userChosenName = productNames[i];
+            }
+            return userChosenName;
+        }
+
+        private int ChooseQuantity(Products product)
+        {
+            Console.WriteLine("Сколько вы хотите приобрести?\n");
+            string userInput = Console.ReadLine();
+            int userQuantity = GetCorrectNumber(userInput);
+
+            foreach (var stack in _products)
+            {
+                if (product == stack.Product.Name && stack.Quantity >= userQuantity)
+                    return userQuantity;
             }
 
-            public Goods GetName()
+            Console.WriteLine("Такого количества товара нет у продавца.");
+            return 0;
+        }
+
+        private void GiveProduct(Stack stack, int quantity)
+        {
+            foreach (Stack product in _products)
             {
-                return _product.Name;
+                if (stack == product)
+                    product.DecreaseQuantity(quantity);
+            }
+        }
+
+        private int GetCorrectNumber(string userInput)
+        {
+            if (isNumber(userInput))
+            {
+                return Convert.ToInt32(userInput);
             }
 
-            public Product GetProduct()
+            Console.WriteLine("Введено некорректное число.");
+            return 0;
+        }
+
+        private bool isNumber(string userInput)
+        {
+            return int.TryParse(userInput, out var number);
+        }
+
+        private void ShowDefaultMessage()
+        {
+            Console.Clear();
+            Console.WriteLine("Такой команды не существует.");
+        }
+    }
+
+    class Player
+    {
+        private List<Stack> _products = new List<Stack>();
+        private Random _randomCash = new Random();
+        private int _minCash = 1000;
+        private int _maxCash = 3000;
+
+        public Wallet Wallet { get; private set; }
+
+        public Player()
+        {
+            int newCash = _randomCash.Next(_minCash, _maxCash);
+            Wallet = new Wallet(newCash);
+
+            foreach (Products productName in Enum.GetValues(typeof(Products)))
             {
-                return _product;
+                _products.Add(new Stack(new Product(productName, 0), 0));
+            }
+        }
+
+        public void ShowProducts()
+        {
+            Console.Clear();
+
+            foreach (var stack in _products)
+            {
+                Console.WriteLine($"{stack.Product.Name} - {stack.Quantity} шт.");
+            }
+
+            Console.WriteLine($"Осталось денег: {Wallet.Cash} руб.");
+            Console.WriteLine();
+        }
+
+        public void TakeProduct(Stack stack, int quantity)
+        {
+            foreach (Stack product in _products)
+            {
+                if (product.Product.Name == stack.Product.Name)
+                    product.IncreaseQuantity(quantity);
             }
         }
     }
 
-    enum Goods
+    class Stack
     {
-        Яблоко,
-        Вода,
-        Хлеб,
-        Мясо,
-        Сыр
+        public Product Product { get; private set; }
+        public int Quantity { get; private set; }
+
+        public Stack(Product product, int quantity)
+        {
+            Product = product;
+            Quantity = quantity;
+        }
+
+        public void IncreaseQuantity(int quantity)
+        {
+            Quantity += quantity;
+        }
+
+        public void DecreaseQuantity(int quantity)
+        {
+            Quantity -= quantity;
+        }
+    }
+
+    class Product
+    {
+        public Products Name { get; private set; }
+        public int Price { get; private set; }
+
+        public Product(Products productName, int price)
+        {
+            Name = productName;
+            Price = price;
+        }
+    }
+
+    class Wallet
+    {
+        public int Cash { get; private set; }
+
+        public Wallet(int cash)
+        {
+            Cash = cash;
+        }
+
+        public void DecreaseCash(int value)
+        {
+            Cash -= value;
+        }
+    }
+
+    enum Products
+    {
+        Meat = 1,
+        Cheese,
+        Water,
+        Apple,
+        Bread
     }
 }
