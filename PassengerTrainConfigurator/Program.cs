@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PassengerTrainConfigurator
 {
@@ -20,6 +17,8 @@ namespace PassengerTrainConfigurator
         private List<Train> _sentTrains;
         private List<Direction> _directions;
         private Train _currentTrain;
+        private Direction _currentDirection;
+        private int _currentSoldTickets;
 
         public RailwayStation()
         {
@@ -33,7 +32,7 @@ namespace PassengerTrainConfigurator
 
             while (isOpen)
             {
-                Console.SetCursorPosition(0,0);
+                Console.SetCursorPosition(0, 0);
                 Console.WriteLine("Отправленные поезда:");
                 ShowSentTrains();
                 int cursorOffsetY = _sentTrains.Count + 7;
@@ -72,7 +71,7 @@ namespace PassengerTrainConfigurator
 
         private void ShowSentTrains()
         {
-            if(_sentTrains.Count == 0)
+            if (_sentTrains.Count == 0)
             {
                 Console.WriteLine("Нет отправленных поездов.\n");
             }
@@ -80,7 +79,8 @@ namespace PassengerTrainConfigurator
             {
                 foreach (var item in _sentTrains)
                 {
-                    Console.WriteLine($"{item.Direction} - {item.GetCars().Count} вагонов - {item.SoldTickets} пассажиров.");
+                    Console.WriteLine($"{item.Direction.Name} - {item.GetCarsCount()} вагонов -" +
+                        $" {item.SoldTickets}/{item.GetTotalCapacity()} пассажиров.");
                 }
             }
         }
@@ -89,6 +89,8 @@ namespace PassengerTrainConfigurator
         {
             Direction direction = new Direction();
             _directions.Add(direction);
+            _currentDirection = direction;
+
             Console.Clear();
             int cursorOffsetY = _sentTrains.Count + 3;
             Console.SetCursorPosition(0, cursorOffsetY);
@@ -97,24 +99,69 @@ namespace PassengerTrainConfigurator
 
         private void SellTickets()
         {
-            int lastIndex = _directions.Count - 1;
-            _directions[lastIndex].AddSoldTickets();
-            Console.Clear();
-            int cursorOffsetY = _sentTrains.Count + 3;
-            Console.SetCursorPosition(0, cursorOffsetY);
-            Console.WriteLine($"Продано {_directions[lastIndex].SoldTickets} билетов.");
+            if (_currentDirection == null)
+            {
+                Console.Clear();
+                int cursorOffsetY = _sentTrains.Count + 3;
+                Console.SetCursorPosition(0, cursorOffsetY);
+                Console.WriteLine("Нет направления для продажи билетов.");
+            }
+            else
+            {
+                int lastIndex = _directions.Count - 1;
+                _directions[lastIndex].AddSoldTickets();
+
+                Console.Clear();
+                int cursorOffsetY = _sentTrains.Count + 3;
+                Console.SetCursorPosition(0, cursorOffsetY);
+                Console.WriteLine($"Продано {_directions[lastIndex].SoldTickets} билетов.");
+                _currentDirection = null;
+                _currentSoldTickets = _directions[lastIndex].SoldTickets;
+            }
         }
 
         private void CreateTrain()
         {
-            int lastIndex = _directions.Count - 1;
-            _currentTrain = new Train(_directions[lastIndex], _directions[lastIndex].SoldTickets);
+            if (_currentSoldTickets == 0)
+            {
+                Console.Clear();
+                int cursorOffsetY = _sentTrains.Count + 3;
+                Console.SetCursorPosition(0, cursorOffsetY);
+                Console.WriteLine($"Нет проданных билетов, собирать поезд не требуется.");
+            }
+            else
+            {
+                int lastIndex = _directions.Count - 1;
+                _currentTrain = new Train(_directions[lastIndex], _directions[lastIndex].SoldTickets);
+
+                Console.Clear();
+                int cursorOffsetY = _sentTrains.Count + 3;
+                Console.SetCursorPosition(0, cursorOffsetY);
+                Console.WriteLine($"Поезд создан и готов к отправке.");
+                _currentSoldTickets = 0;
+            }
         }
 
         private void SendTrain(Train train)
         {
-            train.FillCars();
-            _sentTrains.Add(train);
+            if (_currentTrain == null)
+            {
+                Console.Clear();
+                int cursorOffsetY = _sentTrains.Count + 3;
+                Console.SetCursorPosition(0, cursorOffsetY);
+                Console.WriteLine("Нет ни одного поезда на отправку");
+            }
+            else
+            {
+                train.FillCars();
+                _sentTrains.Add(train);
+
+                Console.Clear();
+                int cursorOffsetY = _sentTrains.Count + 3;
+                Console.SetCursorPosition(0, cursorOffsetY);
+                Console.WriteLine($"Поезд отправлен.");
+                _currentTrain = null;
+            }
         }
 
         private void ShowDefaultMessage()
@@ -142,9 +189,9 @@ namespace PassengerTrainConfigurator
         {
             int soldTicketsTemp = SoldTickets;
 
-            foreach(Car car in _cars)
+            foreach (Car car in _cars)
             {
-                if(soldTicketsTemp < car.Capacity)
+                if (soldTicketsTemp < car.Capacity)
                 {
                     car.AddPassengers(car.Capacity - soldTicketsTemp);
                 }
@@ -156,10 +203,22 @@ namespace PassengerTrainConfigurator
             }
         }
 
-        public List<Car> GetCars()
+        public int GetCarsCount()
         {
-            List<Car> cars = new List<Car>();
+            int cars = _cars.Count;
             return cars;
+        }
+
+        public int GetTotalCapacity()
+        {
+            int totalSpaces = 0;
+
+            foreach (Car car in _cars)
+            {
+                totalSpaces += car.Capacity;
+            }
+
+            return totalSpaces;
         }
 
         private void CreateCars()
@@ -175,9 +234,11 @@ namespace PassengerTrainConfigurator
                     occupiedPlaces += car.Capacity;
                     _cars.Add(car);
                 }
-
-                occupiedPlaces += car.Capacity;
-                _cars.Add(car);
+                else
+                {
+                    occupiedPlaces += car.Capacity;
+                    _cars.Add(car);
+                }
             }
         }
     }
@@ -250,6 +311,10 @@ namespace PassengerTrainConfigurator
         Novosibirsk,
         Magadan,
         Murmansk,
-        Sochi
+        Sochi,
+        Kaliningrad,
+        Moskva,
+        Samara,
+        Penza
     }
 }
