@@ -105,6 +105,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store", "Store\Store.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassengerTrainConfigurator", "PassengerTrainConfigurator\PassengerTrainConfigurator.csproj", "{0774685B-60DF-4211-8C45-4D2B68978E80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GladiatorFights", "GladiatorFights\GladiatorFights.csproj", "{6716B144-9635-428A-824A-0004964E6C4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -291,6 +293,10 @@ Global
 		{0774685B-60DF-4211-8C45-4D2B68978E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0774685B-60DF-4211-8C45-4D2B68978E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0774685B-60DF-4211-8C45-4D2B68978E80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6716B144-9635-428A-824A-0004964E6C4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6716B144-9635-428A-824A-0004964E6C4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6716B144-9635-428A-824A-0004964E6C4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6716B144-9635-428A-824A-0004964E6C4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -338,6 +344,7 @@ Global
 		{059B75ED-6F9F-4F41-8376-EA696C52632D} = {8032D877-0284-4C07-8E82-28150C815FC6}
 		{21A74C9B-E5EC-439F-9D64-9C70EE85C7D9} = {8032D877-0284-4C07-8E82-28150C815FC6}
 		{0774685B-60DF-4211-8C45-4D2B68978E80} = {8032D877-0284-4C07-8E82-28150C815FC6}
+		{6716B144-9635-428A-824A-0004964E6C4B} = {8032D877-0284-4C07-8E82-28150C815FC6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28DD9957-988B-4D3F-B65D-FAC8491DFCAD}
