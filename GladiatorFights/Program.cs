@@ -16,6 +16,15 @@ namespace GladiatorFights
     {
         private List<Fighter> _fighters = new List<Fighter>();
 
+        public Coliseum()
+        {
+            _fighters.Add(new Mermaid());
+            _fighters.Add(new Bum());
+            _fighters.Add(new Boxer());
+            _fighters.Add(new BattleMage());
+            _fighters.Add(new MothersFriendSon());
+        }
+
         public void Open()
         {
             bool isOpen = true;
@@ -23,24 +32,36 @@ namespace GladiatorFights
 
             while (isOpen)
             {
-
+                Console.WriteLine("Меню:\n" +
+                    "1. Показать бойцов.\n" +
+                    "2. Выбрать бойцов для арены.\n" +
+                    "3. Начать бой.\n" +
+                    "4. Выход.");
                 string userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case "1":
+                        ShowAllFighters();
                         break;
                     case "2":
                         break;
                     case "3":
                         break;
                     case "4":
-                        break;
-                    case "5":
+                        isOpen = false;
                         break;
                     default:
                         break;
                 }
+            }
+        }
+
+        private void ShowAllFighters()
+        {
+            foreach(var fighter in _fighters)
+            {
+                fighter.ShowStats();
             }
         }
     }
@@ -48,10 +69,10 @@ namespace GladiatorFights
     class Fighter
     {
         private string _name;
-        private float _health;
         private float _damage;
         private float _defense;
 
+        public float Health { get; private set; }
         public string ClassName { get; protected set; }
 
         public Fighter()
@@ -71,24 +92,19 @@ namespace GladiatorFights
             }
 
             _name = names[random.Next(names.Count)];
-            _health = random.Next(minHealth, maxHealth);
             _damage = random.Next(minDamage, maxDamage);
             _defense = random.Next(minDefense, maxDefense);
+            Health = random.Next(minHealth, maxHealth);
         }
 
         public void ShowStats()
         {
-            Console.WriteLine($"{_name} - HP: {_health} - DMG: {_damage} - DEF: {_defense}");
+            Console.WriteLine($"{ClassName} - {_name} - HP: {Health} - DMG: {_damage} - DEF: {_defense}");
         }
 
         public void TakeDamage(float damage)
         {
-            _health -= damage - _defense;
-        }
-
-        private void CreateStats()
-        {
-
+            Health -= damage - _defense;
         }
     }
 
@@ -97,6 +113,11 @@ namespace GladiatorFights
         public MothersFriendSon() : base()
         {
             ClassName = Enum.GetName(typeof(FighterClassName), FighterClassName.MothersFriendSon);
+        }
+
+        public void CastMotherCall()
+        {
+
         }
     }
 
@@ -121,6 +142,11 @@ namespace GladiatorFights
         {
             ClassName = Enum.GetName(typeof(FighterClassName), FighterClassName.Boxer);
         }
+
+        public void CastCyberPunch()
+        {
+
+        }
     }
 
     class Mermaid : Fighter
@@ -128,6 +154,11 @@ namespace GladiatorFights
         public Mermaid() : base()
         {
             ClassName = Enum.GetName(typeof(FighterClassName), FighterClassName.Mermaid);
+        }
+
+        public void CastTailSlap()
+        {
+
         }
     }
 
@@ -138,6 +169,11 @@ namespace GladiatorFights
         public Bum() : base()
         {
             ClassName = Enum.GetName(typeof(FighterClassName), FighterClassName.Bum);
+        }
+
+        public void CastBottleHit()
+        {
+
         }
     }
 
