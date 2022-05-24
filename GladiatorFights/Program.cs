@@ -16,6 +16,7 @@ namespace GladiatorFights
     {
         private List<Fighter> _fighters = new List<Fighter>();
         private List<Fighter> _chosenFighters = new List<Fighter>();
+        private List<Fighter> _alternateFighters = new List<Fighter>();
         private Random _random = new Random();
 
         public Coliseum()
@@ -25,6 +26,11 @@ namespace GladiatorFights
             _fighters.Add(new Boxer(_random));
             _fighters.Add(new BattleMage(_random));
             _fighters.Add(new MothersFriendSon(_random));
+            _alternateFighters.Add(new Mermaid(_random));
+            _alternateFighters.Add(new Bum(_random));
+            _alternateFighters.Add(new Boxer(_random));
+            _alternateFighters.Add(new BattleMage(_random));
+            _alternateFighters.Add(new MothersFriendSon(_random));
         }
 
         public void Open()
@@ -33,13 +39,13 @@ namespace GladiatorFights
             StartFight();
         }
 
-        private void ShowAllFighters()
+        private void ShowAllFighters(List<Fighter> fighters)
         {
             Console.Clear();
 
-            foreach(var fighter in _fighters)
+            foreach (var fighter in fighters)
             {
-                Console.Write($"{_fighters.IndexOf(fighter) + 1}. ");
+                Console.Write($"{fighters.IndexOf(fighter) + 1}. ");
                 fighter.ShowStats();
             }
 
@@ -57,7 +63,12 @@ namespace GladiatorFights
             {
                 choosingCount++;
                 Console.Clear();
-                ShowAllFighters();
+
+                if (choosingCount == 1)
+                    ShowAllFighters(_fighters);
+                else
+                    ShowAllFighters(_alternateFighters);
+
                 Console.WriteLine("6. Выход.\n");
 
                 if (choosingCount > maxChosenFighters)
@@ -76,15 +87,17 @@ namespace GladiatorFights
                     string userInput = Console.ReadLine();
                     int.TryParse(userInput, out int number);
 
-                    if(number < 1 || number > _fighters.Count)
+                    if (number < 1 || number > _fighters.Count)
                     {
                         Console.Clear();
                         Console.WriteLine("Такого бойца нет в списке.\n Нажмите любую клавишу.");
                         Console.ReadKey();
                         choosingCount--;
                     }
-                    else
+                    else if (choosingCount == 2 && _fighters[number - 1] != _chosenFighters[0])
                         _chosenFighters.Add(_fighters[number - 1]);
+                    else
+                        _chosenFighters.Add(_alternateFighters[number - 1]);
                 }
             }
         }
@@ -106,6 +119,13 @@ namespace GladiatorFights
                 Console.WriteLine($"У {_secondFighter.Name} осталось {_secondFighter.Health} здоровья.");
                 Console.WriteLine();
                 Console.ReadKey();
+
+                if (_firstFighter.Health <= 0 && _secondFighter.Health <= 0)
+                    Console.WriteLine("Ничья! Два трупа по цене одного!");
+                else if (_firstFighter.Health <= 0)
+                    Console.WriteLine($"Победа бойца {_secondFighter.Name}");
+                else
+                    Console.WriteLine($"Победа бойца {_firstFighter.Name}");
             }
         }
     }
@@ -146,19 +166,29 @@ namespace GladiatorFights
 
         public virtual void DoAction(int roundsCount, Fighter enemy)
         {
-            TakeDamage(enemy.Damage);
+            enemy.TakeDamage(Damage);
         }
 
         public void TakeDamage(float damage)
         {
-            Health -= damage - Defense;
-            Console.WriteLine($"{Name} получает урон - {damage - Defense}");
+            if (damage - Defense > 0)
+            {
+                Health -= damage - Defense;
+                Console.WriteLine($"{Name} получает урон - {damage - Defense}");
+            }
+            else
+                Console.WriteLine($"{Name} не получает урон. Слабый удар противника не пробил защиту.");
         }
 
         public void TakeDoubleDamage(float damage)
         {
-            Health -= (damage - Defense) * 2;
-            Console.WriteLine($"{Name} получает двойной урон - {damage * 2 - Defense}");
+            if (damage - Defense > 0)
+            {
+                Health -= (damage - Defense) * 2;
+                Console.WriteLine($"{Name} получает двойной урон - {damage * 2 - Defense}");
+            }
+            else
+                Console.WriteLine($"{Name} не получает урон. Слабый удар противника не пробил защиту.");
         }
 
         public void DropDefense()
@@ -169,6 +199,13 @@ namespace GladiatorFights
         public void RefreshDefense(int defense)
         {
             Defense = defense;
+        }
+
+        public void DecreaseDamage()
+        {
+            Damage -= 15;
+            if (Damage < 5)
+                Damage = 5;
         }
     }
 
@@ -212,7 +249,7 @@ namespace GladiatorFights
             int fireballAllowNumber = 60;
             int firebalPossibility = random.Next(fireballMaxChance);
 
-            if(firebalPossibility > fireballAllowNumber && _mana >= fireballCost)
+            if (firebalPossibility > fireballAllowNumber && _mana >= fireballCost)
             {
                 _mana -= fireballCost;
                 CastFireball(enemy);
@@ -248,7 +285,7 @@ namespace GladiatorFights
             if (cyberPunchPossibility > cyberPunchAllowNumber)
                 CastCyberPunch(enemy);
             else
-                TakeDamage(enemy.Damage);
+                enemy.TakeDamage(Damage);
         }
 
         public void CastCyberPunch(Fighter enemy)
@@ -256,13 +293,15 @@ namespace GladiatorFights
             int enemyDefense = enemy.Defense;
             enemy.DropDefense();
             Console.WriteLine($"{Name} наносит Кибер-удар!(игнорирует защиту)");
-            TakeDamage(enemy.Damage);
+            enemy.TakeDamage(Damage);
             enemy.RefreshDefense(enemyDefense);
         }
     }
 
     class Mermaid : Fighter
     {
+        private bool _isTailSlapDone = false;
+
         public Mermaid(Random random) : base(random)
         {
             ClassName = Enum.GetName(typeof(FighterClassName), FighterClassName.Mermaid);
@@ -270,12 +309,21 @@ namespace GladiatorFights
 
         override public void DoAction(int roundsCount, Fighter enemy)
         {
-            TakeDamage(enemy.Damage);
+            if (Health <= 50 && _isTailSlapDone != true)
+            {
+                CastTailSlap(enemy);
+                _isTailSlapDone = true;
+            }
+            else
+                enemy.TakeDamage(Damage);
         }
 
-        public void CastTailSlap()
+        public void CastTailSlap(Fighter enemy)
         {
-            //TODO
+            Damage += 20;
+            enemy.DecreaseDamage();
+            Console.WriteLine($"{Name} выдаёт знатного леща хвостом! Урон увеличен.");
+            enemy.TakeDamage(Damage);
         }
     }
 
@@ -290,12 +338,20 @@ namespace GladiatorFights
 
         override public void DoAction(int roundsCount, Fighter enemy)
         {
-            TakeDamage(enemy.Damage);
+            if (roundsCount % 2 == 0)
+                CastBottleHit(enemy);
+            else
+                enemy.TakeDamage(Damage);
         }
 
-        public void CastBottleHit()
+        public void CastBottleHit(Fighter enemy)
         {
-            //TODO
+            int DamageMultiplier = 3;
+            Console.WriteLine($"Бомж {Name} допил бутылку и треснул ей по башке. Здоровье восстанавливается.");
+            Health += 30;
+            _alcoLevel++;
+            Damage += _alcoLevel * DamageMultiplier;
+            enemy.TakeDamage(Damage);
         }
     }
 
