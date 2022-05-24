@@ -102,8 +102,6 @@ namespace GladiatorFights
                 roundsCount++;
                 _firstFighter.DoAction(roundsCount, _secondFighter);
                 _secondFighter.DoAction(roundsCount, _firstFighter);
-                Console.WriteLine($"{_firstFighter.Name} наносит {_secondFighter.Name} {_firstFighter.Damage - _secondFighter.Defense} урона.");
-                Console.WriteLine($"{_secondFighter.Name} наносит {_firstFighter.Name} {_secondFighter.Damage - _firstFighter.Defense} урона.");
                 Console.WriteLine($"У {_firstFighter.Name} осталось {_firstFighter.Health} здоровья.");
                 Console.WriteLine($"У {_secondFighter.Name} осталось {_secondFighter.Health} здоровья.");
                 Console.WriteLine();
@@ -114,7 +112,7 @@ namespace GladiatorFights
 
     class Fighter
     {
-        public float Defense { get; private set; }
+        public int Defense { get; private set; }
         public float Damage { get; protected set; }
         public float Health { get; protected set; }
         public string ClassName { get; protected set; }
@@ -154,17 +152,23 @@ namespace GladiatorFights
         public void TakeDamage(float damage)
         {
             Health -= damage - Defense;
+            Console.WriteLine($"{Name} получает урон - {damage - Defense}");
         }
 
         public void TakeDoubleDamage(float damage)
         {
             Health -= (damage - Defense) * 2;
-            Console.WriteLine($"{Name} получает двойной урон - {damage * 2}");
+            Console.WriteLine($"{Name} получает двойной урон - {damage * 2 - Defense}");
         }
 
         public void DropDefense()
         {
             Defense = 0;
+        }
+
+        public void RefreshDefense(int defense)
+        {
+            Defense = defense;
         }
     }
 
@@ -178,11 +182,9 @@ namespace GladiatorFights
         override public void DoAction(int roundsCount, Fighter enemy)
         {
             if (roundsCount % 3 == 0)
-            {
                 CastMotherCall();
-            }
 
-            TakeDamage(enemy.Damage);
+            enemy.TakeDamage(Damage);
         }
 
         public void CastMotherCall()
@@ -215,15 +217,17 @@ namespace GladiatorFights
                 _mana -= fireballCost;
                 CastFireball(enemy);
             }
-
-            TakeDamage(enemy.Damage);
+            else
+            {
+                enemy.TakeDamage(Damage);
+            }
         }
 
         public void CastFireball(Fighter enemy)
         {
             Console.WriteLine($"{Name} кастует огненный шар!");
-            enemy.TakeDoubleDamage(Damage);
             Console.WriteLine($"Осталось {_mana} маны.");
+            enemy.TakeDoubleDamage(Damage);
         }
     }
 
@@ -236,12 +240,24 @@ namespace GladiatorFights
 
         override public void DoAction(int roundsCount, Fighter enemy)
         {
-            TakeDamage(enemy.Damage);
+            Random random = new Random();
+            int cyberPunchMaxChance = 100;
+            int cyberPunchAllowNumber = 70;
+            int cyberPunchPossibility = random.Next(cyberPunchMaxChance);
+
+            if (cyberPunchPossibility > cyberPunchAllowNumber)
+                CastCyberPunch(enemy);
+            else
+                TakeDamage(enemy.Damage);
         }
 
-        public void CastCyberPunch()
+        public void CastCyberPunch(Fighter enemy)
         {
-            //TODO
+            int enemyDefense = enemy.Defense;
+            enemy.DropDefense();
+            Console.WriteLine($"{Name} наносит Кибер-удар!(игнорирует защиту)");
+            TakeDamage(enemy.Damage);
+            enemy.RefreshDefense(enemyDefense);
         }
     }
 
