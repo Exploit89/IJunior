@@ -7,7 +7,8 @@ namespace ZOO
     {
         static void Main(string[] args)
         {
-            ZooGuide zooGuide = new ZooGuide();
+            AnimalEncyclopedia animalEncyclopedia = new AnimalEncyclopedia();
+            ZooGuide zooGuide = new ZooGuide(animalEncyclopedia.GetAnimalsNoises());
             zooGuide.Open();
         }
     }
@@ -17,17 +18,17 @@ namespace ZOO
         private List<Aviary> _aviaries;
         private Random _random = new Random();
 
-        public ZooGuide()
+        public ZooGuide(Dictionary<string, string> animalsNoises)
         {
             _aviaries = new List<Aviary>();
-            _aviaries.Add(new Aviary(_random));
-            _aviaries.Add(new Aviary(_random));
-            _aviaries.Add(new Aviary(_random));
-            _aviaries.Add(new Aviary(_random));
-            _aviaries.Add(new Aviary(_random));
-            _aviaries.Add(new Aviary(_random));
-            _aviaries.Add(new Aviary(_random));
-            _aviaries.Add(new Aviary(_random));
+            _aviaries.Add(new Aviary(_random, animalsNoises));
+            _aviaries.Add(new Aviary(_random, animalsNoises));
+            _aviaries.Add(new Aviary(_random, animalsNoises));
+            _aviaries.Add(new Aviary(_random, animalsNoises));
+            _aviaries.Add(new Aviary(_random, animalsNoises));
+            _aviaries.Add(new Aviary(_random, animalsNoises));
+            _aviaries.Add(new Aviary(_random, animalsNoises));
+            _aviaries.Add(new Aviary(_random, animalsNoises));
         }
 
         public void Open()
@@ -74,7 +75,7 @@ namespace ZOO
 
         public string Name { get; private set; }
 
-        public Aviary(Random random)
+        public Aviary(Random random, Dictionary<string, string> animalsNoises)
         {
             int minAnimals = 5;
             int maxAnimals = 10;
@@ -83,7 +84,7 @@ namespace ZOO
             Name = "Вольер № " + random.Next(maxNumber);
 
             for (int i = 0; i < random.Next(minAnimals, maxAnimals); i++)
-                _animals.Add(new Animal(random));
+                _animals.Add(new Animal(random, animalsNoises));
         }
 
         public List<Animal> GetAnimals()
@@ -109,34 +110,51 @@ namespace ZOO
         }
     }
 
+    class AnimalEncyclopedia
+    {
+        private Dictionary<string, string> _animalsNoises;
+
+        public AnimalEncyclopedia()
+        {
+            _animalsNoises = new Dictionary<string, string>();
+            _animalsNoises.Add("Cow", "Moo");
+            _animalsNoises.Add("Tiger", "Argh");
+            _animalsNoises.Add("Dog", "Woof");
+            _animalsNoises.Add("Dove", "Coo");
+            _animalsNoises.Add("Cat", "Meow");
+            _animalsNoises.Add("Frog", "Croak");
+            _animalsNoises.Add("Goat", "Bleat");
+            _animalsNoises.Add("Jackal", "Howl");
+            _animalsNoises.Add("Owl", "Hoot");
+            _animalsNoises.Add("Rat", "Squeak");
+        }
+
+        public Dictionary<string, string> GetAnimalsNoises()
+        {
+            Dictionary<string, string> animalsNoises = new Dictionary<string, string>();
+
+            foreach (var i in _animalsNoises)
+                animalsNoises.Add(i.Key, i.Value);
+
+            return animalsNoises;
+        }
+    }
+
     class Animal
     {
-        private Dictionary<string, string> _animals;
         public string Name { get; private set; }
         public string Noise { get; private set; }
         public string Gender { get; private set; }
 
-        public Animal(Random random)
+        public Animal(Random random, Dictionary<string, string> animalsNoises)
         {
-            _animals = new Dictionary<string, string>();
-            _animals.Add("Cow", "Moo");
-            _animals.Add("Tiger", "Argh");
-            _animals.Add("Dog", "Woof");
-            _animals.Add("Dove", "Coo");
-            _animals.Add("Cat", "Meow");
-            _animals.Add("Frog", "Croak");
-            _animals.Add("Goat", "Bleat");
-            _animals.Add("Jackal", "Howl");
-            _animals.Add("Owl", "Hoot");
-            _animals.Add("Rat", "Squeak");
-
             List<string> names = new List<string>();
             List<string> noises = new List<string>();
             List<string> genders = new List<string>();
             genders.Add("Male");
             genders.Add("Female");
 
-            foreach (var item in _animals)
+            foreach (var item in animalsNoises)
             {
                 names.Add(item.Key);
                 noises.Add(item.Value);
