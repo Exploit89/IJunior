@@ -63,24 +63,18 @@ namespace Aquarium
 
         private void ShowAquarium()
         {
-            int fishNumber = 0;
             Console.WriteLine($"\nДень: {DayCount}\n" +
                 $"Аквариум:\n");
 
-            foreach (var fish in _fishList)
-            {
-                fishNumber++;
-                Console.WriteLine($"{fishNumber}. {fish.Name} - {fish.Health} - {fish.Condition}");
-            }
+            for (int i = 0; i < _fishList.Count; i++)
+                Console.WriteLine($"{_fishList[i]}. {_fishList[i].Name} - {_fishList[i].Health} - {_fishList[i].Condition}");
 
             Console.WriteLine();
         }
         private void TurnNextDay()
         {
             foreach (var fish in _fishList)
-            {
                 fish.GrowOld();
-            }
 
             DayCount++;
             Console.Clear();
@@ -88,13 +82,12 @@ namespace Aquarium
 
         private void AddFish()
         {
-            if(_fishList.Count < MaxCapacity)
+            if (_fishList.Count < MaxCapacity)
             {
                 Fish fish = new Fish(_random);
                 _fishList.Add(fish);
                 Console.Clear();
                 Console.WriteLine($"Вы добавили в аквариум рыбку {fish.Name}");
-                TurnNextDay();
             }
             else
             {
@@ -108,7 +101,7 @@ namespace Aquarium
             Console.WriteLine("Какую рыбку вы хотите взять из аквариума?");
             string userInput = Console.ReadLine();
 
-            if (isNumber(userInput))
+            if (IsNumber(userInput))
             {
                 int.TryParse(userInput, out int number);
                 int userIndex = number - 1;
@@ -118,7 +111,6 @@ namespace Aquarium
                     Console.Clear();
                     Console.WriteLine($"Вы забрали из аквариума рыбку {_fishList[userIndex].Name}");
                     _fishList.RemoveAt(userIndex);
-                    TurnNextDay();
                 }
                 else
                 {
@@ -133,7 +125,7 @@ namespace Aquarium
             }
         }
 
-        private bool isNumber(string userInput)
+        private bool IsNumber(string userInput)
         {
             return int.TryParse(userInput, out int number);
         }
@@ -169,6 +161,7 @@ namespace Aquarium
         public void GrowOld()
         {
             Health -= 1;
+
             if (Health <= 0)
             {
                 Health = 0;
