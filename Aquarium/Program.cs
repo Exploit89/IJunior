@@ -153,7 +153,7 @@ namespace Aquarium
             foreach (var name in Enum.GetNames(typeof(FishName)))
                 fishNames.Add(name);
 
-            Name = fishNames[random.Next(fishNames.Count)]; ;
+            Name = fishNames[random.Next(fishNames.Count)];
             Health = health;
             Condition = "ЖИВА";
         }
