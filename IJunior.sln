@@ -117,6 +117,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZOO", "ZOO\ZOO.csproj", "{A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarService", "CarService\CarService.csproj", "{C41E1F36-BE40-4A87-BD5C-0F8F8FABFE39}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter_7", "Chapter_7", "{FEE5ADE5-164F-47D1-BF19-CF33E5354A1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CriminalSearch", "CriminalSearch\CriminalSearch.csproj", "{32F2308F-517C-4738-AC41-95FD38B742D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -327,6 +331,10 @@ Global
 		{C41E1F36-BE40-4A87-BD5C-0F8F8FABFE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C41E1F36-BE40-4A87-BD5C-0F8F8FABFE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C41E1F36-BE40-4A87-BD5C-0F8F8FABFE39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32F2308F-517C-4738-AC41-95FD38B742D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32F2308F-517C-4738-AC41-95FD38B742D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32F2308F-517C-4738-AC41-95FD38B742D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32F2308F-517C-4738-AC41-95FD38B742D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -380,6 +388,7 @@ Global
 		{1C46FB23-4D38-4784-BF61-1B5D5C6DCD18} = {8032D877-0284-4C07-8E82-28150C815FC6}
 		{ABC25981-DAC5-4964-B5B4-582F330EDF30} = {8032D877-0284-4C07-8E82-28150C815FC6}
 		{C41E1F36-BE40-4A87-BD5C-0F8F8FABFE39} = {8032D877-0284-4C07-8E82-28150C815FC6}
+		{32F2308F-517C-4738-AC41-95FD38B742D7} = {FEE5ADE5-164F-47D1-BF19-CF33E5354A1C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28DD9957-988B-4D3F-B65D-FAC8491DFCAD}
