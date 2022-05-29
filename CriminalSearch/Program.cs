@@ -89,11 +89,11 @@ namespace CriminalSearch
 
     class Criminal
     {
-        public string FullName;
-        public bool IsPrisoner;
-        public int Height;
-        public int Weight;
-        public string Nationality;
+        public string FullName { get; private set; }
+        public bool IsPrisoner { get; private set; }
+        public int Height { get; private set; }
+        public int Weight { get; private set; }
+        public string Nationality { get; private set; }
 
         public Criminal(string fullname, bool isPrisoner, int height, int weight, string nationality)
         {
