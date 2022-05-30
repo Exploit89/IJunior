@@ -129,6 +129,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopServerPlayers", "TopServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DefinitionExpiration", "DefinitionExpiration\DefinitionExpiration.csproj", "{7D94DDFF-60A9-4A8B-8254-19BA9E661FD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArmsReport", "ArmsReport\ArmsReport.csproj", "{C49B4C87-E6D1-4BC8-8AA2-EB57945C93D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -359,6 +361,10 @@ Global
 		{7D94DDFF-60A9-4A8B-8254-19BA9E661FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D94DDFF-60A9-4A8B-8254-19BA9E661FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D94DDFF-60A9-4A8B-8254-19BA9E661FD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C49B4C87-E6D1-4BC8-8AA2-EB57945C93D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C49B4C87-E6D1-4BC8-8AA2-EB57945C93D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C49B4C87-E6D1-4BC8-8AA2-EB57945C93D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C49B4C87-E6D1-4BC8-8AA2-EB57945C93D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -417,6 +423,7 @@ Global
 		{55F481EF-10B1-414D-AAFB-43A000F8B1D3} = {FEE5ADE5-164F-47D1-BF19-CF33E5354A1C}
 		{5977848F-A846-4CBC-B748-5AD0A640C0E9} = {FEE5ADE5-164F-47D1-BF19-CF33E5354A1C}
 		{7D94DDFF-60A9-4A8B-8254-19BA9E661FD6} = {FEE5ADE5-164F-47D1-BF19-CF33E5354A1C}
+		{C49B4C87-E6D1-4BC8-8AA2-EB57945C93D1} = {FEE5ADE5-164F-47D1-BF19-CF33E5354A1C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28DD9957-988B-4D3F-B65D-FAC8491DFCAD}
