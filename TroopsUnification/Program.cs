@@ -35,19 +35,23 @@ namespace TroopsUnification
 
         public void Start()
         {
-            ShowInitialList();
+            ShowFirstList();
             MoveSoldiersToSecond();
+            Console.WriteLine();
+            Console.WriteLine("Состав списков после перемещения солдат.\n");
+            ShowFirstList();
             ShowSecondList();
         }
 
-        private void ShowInitialList()
+        private void ShowFirstList()
         {
-            Console.WriteLine("\nИсходный список: ");
+            Console.WriteLine("\nПервый список: ");
 
             foreach (var soldier in _firstSoldiers)
             {
-                int serviceYear = soldier.ServiceTime / 12;
-                int serviceMonth = soldier.ServiceTime % 12;
+                int monthsInYear = 12;
+                int serviceYear = soldier.ServiceTime / monthsInYear;
+                int serviceMonth = soldier.ServiceTime % monthsInYear;
                 Console.WriteLine($"{soldier.Name} - {soldier.Weapons}, {soldier.Rank}, {serviceYear} лет {serviceMonth} месяцев.");
             }
         }
@@ -55,7 +59,8 @@ namespace TroopsUnification
         public void MoveSoldiersToSecond()
         {
             var newSoldiersList = _firstSoldiers.OrderBy(soldier => soldier.Name).Where(soldier => soldier.Name.StartsWith("Б"));
-            _secondSoldiers = newSoldiersList.ToList();
+            _secondSoldiers = (_firstSoldiers.Where(soldier => soldier.Name.StartsWith("Б"))).ToList();
+            _firstSoldiers = (_firstSoldiers.Except(_secondSoldiers)).ToList();
         }
 
         private void ShowSecondList()
@@ -64,8 +69,9 @@ namespace TroopsUnification
 
             foreach (var soldier in _secondSoldiers)
             {
-                int serviceYear = soldier.ServiceTime / 12;
-                int serviceMonth = soldier.ServiceTime % 12;
+                int monthsInYear = 12;
+                int serviceYear = soldier.ServiceTime / monthsInYear;
+                int serviceMonth = soldier.ServiceTime % monthsInYear;
                 Console.WriteLine($"{soldier.Name} - {serviceYear} лет {serviceMonth} месяцев.");
             }
         }
@@ -87,4 +93,3 @@ namespace TroopsUnification
         }
     }
 }
-

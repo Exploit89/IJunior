@@ -42,8 +42,9 @@ namespace ArmsReport
 
             foreach (var soldier in _soldiers)
             {
-                int serviceYear = soldier.ServiceTime / 12;
-                int serviceMonth = soldier.ServiceTime % 12;
+                int monthsInYear = 12;
+                int serviceYear = soldier.ServiceTime / monthsInYear;
+                int serviceMonth = soldier.ServiceTime % monthsInYear;
                 Console.WriteLine($"{soldier.Name} - {soldier.Weapons}, {soldier.Rank}, {serviceYear} лет {serviceMonth} месяцев.");
             }
         }
@@ -60,8 +61,9 @@ namespace ArmsReport
 
             foreach (var soldier in newSoldiersList)
             {
-                int serviceYear = soldier.ServiceTime / 12;
-                int serviceMonth = soldier.ServiceTime % 12;
+                int monthsInYear = 12;
+                int serviceYear = soldier.ServiceTime / monthsInYear;
+                int serviceMonth = soldier.ServiceTime % monthsInYear;
                 Console.WriteLine($"{soldier.Name} - {serviceYear} лет {serviceMonth} месяцев.");
             }
         }
